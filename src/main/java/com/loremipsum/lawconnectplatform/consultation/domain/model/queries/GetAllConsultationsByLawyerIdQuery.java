@@ -1,4 +1,6 @@
 package com.loremipsum.lawconnectplatform.consultation.domain.model.queries;
 
-public record GetAllConsultationsByLawyerIdQuery(Long lawyerId) {
+import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.LawyerC;
+
+public record GetAllConsultationsByLawyerIdQuery(LawyerC lawyerId) {
 }

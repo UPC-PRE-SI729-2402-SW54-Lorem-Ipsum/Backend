@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ConsultationRepository extends JpaRepository<Consultation, Long> {
@@ -14,4 +15,5 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
     List<Consultation> findAllByLawyerId(LawyerC lawyerId);
     List<Consultation> findAllByPaymentId(PaymentC paymentId);
     List<Consultation> findAllByPaymentIdAndLawyerId(PaymentC paymentId, LawyerC lawyerId);
+    Optional<Consultation> findByPaymentIdAndLawyerId(PaymentC paymentC, LawyerC lawyerC);
 }

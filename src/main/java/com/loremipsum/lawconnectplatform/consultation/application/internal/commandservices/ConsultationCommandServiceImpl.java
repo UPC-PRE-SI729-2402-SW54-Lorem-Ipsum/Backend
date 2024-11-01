@@ -2,6 +2,9 @@ package com.loremipsum.lawconnectplatform.consultation.application.internal.comm
 
 import com.loremipsum.lawconnectplatform.consultation.domain.model.aggregates.Consultation;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.CreateConsultationCommand;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.DeleteConsultationCommand;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.LawyerC;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.PaymentC;
 import com.loremipsum.lawconnectplatform.consultation.domain.services.ConsultationCommandService;
 import com.loremipsum.lawconnectplatform.consultation.infrastructure.persistence.jpa.repositories.ConsultationRepository;
 import org.springframework.stereotype.Service;
@@ -16,11 +19,11 @@ public class ConsultationCommandServiceImpl implements ConsultationCommandServic
 
     @Override
     public Long handle(CreateConsultationCommand command) {
-        var lawyerId = command.LawyerId();
-        var clientId = command.ClientId();
+        var lawyerId = new LawyerC(command.lawyerId());
+        var paymentId = new PaymentC(command.paymentId());
 
-        if (consultationRepository.existsByClientIdAndLawyerId(lawyerId, clientId)) {
-            throw new IllegalArgumentException("Consultation already exists for Lawyer: " + lawyerId + " and Client: " + clientId);
+        if (consultationRepository.existsByPaymentIdAndLawyerId(paymentId, lawyerId)) {
+            throw new IllegalArgumentException("Consultation already exists for Lawyer: " + lawyerId + " and Payment: " + paymentId);
         }
 
         var consultation = new Consultation(command);
@@ -32,5 +35,17 @@ public class ConsultationCommandServiceImpl implements ConsultationCommandServic
         }
 
         return consultation.getId();
+    }
+
+    @Override
+    public void handle(DeleteConsultationCommand command) {
+        if (!consultationRepository.existsById(command.consultationId())) {
+            throw new IllegalArgumentException("Consultation");
+        }
+        try {
+            consultationRepository.deleteById(command.consultationId());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error while deleting consultation: " + e.getMessage());
+        }
     }
 }

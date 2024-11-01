@@ -10,18 +10,18 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfiguration {
     @Bean
-    public OpenAPI learningPlatformOpenApi() {
+    public OpenAPI lawconnectPlatformOpenApi() {
         // General configuration
         var openApi = new OpenAPI();
         openApi.info(new Info()
-                        .title("Medic Defense Platform API")
-                        .description("Medic defense Platform application REST API documentation.")
+                        .title("Law Connect Platform API")
+                        .description("Law Connect Platform application REST API documentation.")
                         .version("v1.0.0")
                         .license(new License().name("Apache 2.0")
                                 .url("https://springdoc.org")))
                 .externalDocs(new ExternalDocumentation()
-                        .description("Medic defense Platform wiki Documentation")
-                        .url("https://github.com/Open-Source-Grupo-Testigos-de-Jehova/backend-Medic-Defense.git"));
+                        .description("Law Connect Platform wiki Documentation")
+                        .url("https://github.com/UPC-PRE-SI729-2402-SW54-Lorem-Ipsum"));
         return openApi;
     }
 }

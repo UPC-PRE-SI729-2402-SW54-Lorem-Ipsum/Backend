@@ -1,7 +1,6 @@
 package com.loremipsum.lawconnectplatform.consultation.domain.model.aggregates;
 
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.CreateConsultationCommand;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.ConsultationType;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.LawyerC;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.PaymentC;
 import com.loremipsum.lawconnectplatform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
@@ -23,7 +22,8 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
     private PaymentC paymentId;
 
     @Column(nullable = false)
-    private ConsultationType consultationType;
+    // private ConsultationType consultationType;
+    private String consultationType;
 
     @Column(nullable = false)
     private String description;
@@ -32,7 +32,7 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
     public Consultation() {
         this.lawyerId = new LawyerC(null);
         this.paymentId = new PaymentC(null);
-        this.consultationType = ConsultationType.NONE;
+        this.consultationType = "";
         this.description = "";
     }
 
@@ -40,7 +40,7 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
         this();
         this.lawyerId = new LawyerC(lawyerId);
         this.paymentId = new PaymentC(paymentId);
-        this.consultationType = ConsultationType.valueOf(consultationType);
+        this.consultationType = consultationType;
         this.description = description;
     }
 
@@ -48,7 +48,7 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
         this();
         this.lawyerId = new LawyerC(command.lawyerId());
         this.paymentId = new PaymentC(command.paymentId());
-        this.consultationType = ConsultationType.valueOf(command.consultationType());
+        this.consultationType = command.consultationType();
         this.description = command.description();
     }
 

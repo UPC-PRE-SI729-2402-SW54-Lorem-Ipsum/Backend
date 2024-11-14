@@ -1,0 +1,96 @@
+package com.loremipsum.lawconnectplatform.profiles.domain.model.aggregates;
+
+import com.loremipsum.lawconnectplatform.profiles.domain.model.commands.CreateClientCommand;
+import com.loremipsum.lawconnectplatform.profiles.domain.model.commands.CreateLawyerCommand;
+import com.loremipsum.lawconnectplatform.profiles.domain.model.commands.CreateProfileCommand;
+import com.loremipsum.lawconnectplatform.profiles.domain.model.valueobjects.EmailAddress;
+import com.loremipsum.lawconnectplatform.profiles.domain.model.valueobjects.PersonName;
+import com.loremipsum.lawconnectplatform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+
+@Getter
+@Entity
+public class Profile extends AuditableAbstractAggregateRoot<Profile> {
+
+    @Embedded
+    private PersonName name;
+
+    @Embedded
+    private EmailAddress email;
+
+    @NotNull
+    private String DNI;
+
+    @NotNull
+    private String image_url;
+
+    @NotNull
+    private String phoneNumber;
+
+    @NotNull
+    @Column(name = "address", insertable = false, updatable = false)
+    private String address;
+
+    public Profile(String firstName, String lastName, String email, String phoneNumber, String DNI, String image_url, String address) {
+        this.name = new PersonName(firstName, lastName);
+        this.email = new EmailAddress(email);
+        this.phoneNumber = phoneNumber;
+        this.DNI = DNI;
+        this.image_url = image_url;
+        this.address = address;
+    }
+
+    public Profile(CreateProfileCommand command) {
+        this.name = new PersonName(command.firstName(), command.lastName());
+        this.email = new EmailAddress(command.email());
+        this.phoneNumber = command.phoneNumber();
+        this.address = command.address();
+        this.DNI = command.dni();
+        this.image_url = command.image_url();
+    }
+
+    public Profile(CreateClientCommand command) {
+        this.name = new PersonName(command.firstName(), command.lastName());
+        this.email = new EmailAddress(command.email());
+        this.phoneNumber = command.phoneNumber();
+        this.address = command.address();
+        this.DNI = command.dni();
+        this.image_url = command.image_url();
+    }
+
+    public Profile(CreateLawyerCommand command) {
+        this.name = new PersonName(command.firstName(), command.lastName());
+        this.email = new EmailAddress(command.email());
+        this.phoneNumber = command.phoneNumber();
+        this.address = command.address();
+        this.DNI = command.dni();
+        this.image_url = command.image_url();
+    }
+    public Profile() {
+
+    }
+    public Profile updateName(String firstName, String lastName) {
+        this.name = new PersonName(firstName, lastName);
+        return this;
+    }
+
+    public Profile updateEmail(String email) {
+        this.email = new EmailAddress(email);
+        return this;
+    }
+
+    public Profile updatePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+        return this;
+    }
+
+    public Profile updateDNI(String DNI) {
+        this.DNI = DNI;
+        return this;
+    }
+
+}

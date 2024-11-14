@@ -1,6 +1,5 @@
 package com.loremipsum.lawconnectplatform.shared.domain.model.entities;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,7 +16,7 @@ public class AuditableModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+  
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private Date createdAt;

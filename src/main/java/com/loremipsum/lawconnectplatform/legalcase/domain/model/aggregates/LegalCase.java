@@ -1,11 +1,11 @@
 package com.loremipsum.lawconnectplatform.legalcase.domain.model.aggregates;
 
+import com.loremipsum.lawconnectplatform.consultation.domain.model.aggregates.Consultation;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.commands.CreateLegalCaseCommand;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.valueobjects.Documents;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.valueobjects.LegalCaseStatus;
 import com.loremipsum.lawconnectplatform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
@@ -24,8 +24,9 @@ public class LegalCase extends AuditableAbstractAggregateRoot<LegalCase> {
     @Column(nullable = false)
     private LegalCaseStatus status;
 
-    @NotNull
-    private Long consultationId;
+    @OneToOne
+    @JoinColumn(name = "consultation", nullable = false)
+    private Consultation consultation;
 
     @Embedded
     private Documents documents;
@@ -36,11 +37,11 @@ public class LegalCase extends AuditableAbstractAggregateRoot<LegalCase> {
     }
 
 
-    public LegalCase(CreateLegalCaseCommand command) {
+    public LegalCase(CreateLegalCaseCommand command, Consultation consultation) {
         this();
         this.title = command.title();
         this.description = command.description();
-        this.consultationId = command.consultationId();
+        this.consultation = consultation;
     }
 
     public void close() {

@@ -5,6 +5,6 @@ public record NotificationResource(
         String title,
         String description,
         Long clientId,
-        Long legalCaseId
+        Long consultationId
 ) {
 }

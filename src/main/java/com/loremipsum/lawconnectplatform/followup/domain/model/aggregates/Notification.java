@@ -2,7 +2,6 @@ package com.loremipsum.lawconnectplatform.followup.domain.model.aggregates;
 
 import com.loremipsum.lawconnectplatform.followup.domain.model.commands.CreateNotificationCommand;
 import com.loremipsum.lawconnectplatform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
-import com.loremipsum.lawconnectplatform.shared.domain.model.entities.AuditableModel;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 
@@ -16,13 +15,13 @@ public class Notification extends AuditableAbstractAggregateRoot<Notification> {
 
     private Long clientId;
 
-    private Long legalCaseId;
+    private Long consultationId;
 
     public Notification(CreateNotificationCommand command) {
         this.title = command.title();
         this.description = command.description();
         this.clientId = command.clientId();
-        this.legalCaseId = command.legalCaseId();
+        this.consultationId = command.legalCaseId();
     }
 
     public Notification() {

@@ -1,6 +1,7 @@
 package com.loremipsum.lawconnectplatform.followup.interfaces.rest;
 
-import com.loremipsum.lawconnectplatform.followup.domain.model.queries.GetAllNotificationByLegalCaseIdQuery;
+import com.loremipsum.lawconnectplatform.followup.domain.model.commands.DeleteNotificationCommand;
+import com.loremipsum.lawconnectplatform.followup.domain.model.queries.GetAllNotificationByConsultationIdQuery;
 import com.loremipsum.lawconnectplatform.followup.domain.model.queries.GetAllNotificationsByClientIdQuery;
 import com.loremipsum.lawconnectplatform.followup.domain.model.queries.GetNotificationByIdQuery;
 import com.loremipsum.lawconnectplatform.followup.domain.services.NotificationCommandService;
@@ -52,9 +53,9 @@ public class NotificationController {
         return ResponseEntity.ok(notificationResource);
     }
 
-    @GetMapping("/legal-case/{legalCaseId}")
-    public ResponseEntity<List<NotificationResource>> getAllNotificationsByLegalCaseId(@PathVariable Long legalCaseId) {
-        var notifications = notificationQueryService.handle(new GetAllNotificationByLegalCaseIdQuery(legalCaseId));
+    @GetMapping("/legal-case/{consultationId}")
+    public ResponseEntity<List<NotificationResource>> getAllNotificationsByConsultationId(@PathVariable Long consultationId) {
+        var notifications = notificationQueryService.handle(new GetAllNotificationByConsultationIdQuery(consultationId));
         var notificationsResources = notifications.stream()
                 .map(NotificationResourceFromEntityAssembler::toResourceFromEntity)
                 .toList();
@@ -70,4 +71,11 @@ public class NotificationController {
                 .toList();
         return ResponseEntity.ok(notificationsResources);
     }
+
+    @DeleteMapping("/{notificationId}")
+    public ResponseEntity<?> deleteNotification(@PathVariable Long notificationId) {
+        notificationCommandService.handle(new DeleteNotificationCommand(notificationId));
+        return ResponseEntity.ok("Notification deleted successfully");
+    }
+
 }

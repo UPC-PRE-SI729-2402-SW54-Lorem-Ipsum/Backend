@@ -9,7 +9,7 @@ public class CreateNotificationCommandFromResourceAssembler {
                 resource.title(),
                 resource.description(),
                 resource.clientId(),
-                resource.legalCaseId()
+                resource.consultationId()
         );
     }
 }

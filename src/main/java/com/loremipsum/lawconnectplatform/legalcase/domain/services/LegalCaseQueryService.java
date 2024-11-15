@@ -2,6 +2,7 @@ package com.loremipsum.lawconnectplatform.legalcase.domain.services;
 
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.aggregates.LegalCase;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.queries.GetAllLegalCasesQuery;
+import com.loremipsum.lawconnectplatform.legalcase.domain.model.queries.GetLegalCaseByConsultationIdQuery;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.queries.GetLegalCaseByIdQuery;
 import org.springframework.stereotype.Service;
 
@@ -12,4 +13,5 @@ import java.util.Optional;
 public interface LegalCaseQueryService {
     List<LegalCase> handle(GetAllLegalCasesQuery query);
     Optional<LegalCase> handle(GetLegalCaseByIdQuery query);
+    Optional<LegalCase> handle(GetLegalCaseByConsultationIdQuery query);
 }

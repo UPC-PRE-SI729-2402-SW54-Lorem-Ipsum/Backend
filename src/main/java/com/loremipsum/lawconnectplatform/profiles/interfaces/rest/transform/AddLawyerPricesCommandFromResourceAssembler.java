@@ -7,9 +7,7 @@ public class AddLawyerPricesCommandFromResourceAssembler {
     public static AddLawyerPricesCommand ToCommandFromResource(AddLawyerPricesResource resource) {
         return new AddLawyerPricesCommand(
                 resource.lawyerId(),
-                resource.chatPrice(),
-                resource.videoCallPrice(),
-                resource.faceToFacePrice()
+                resource.price()
         );
     }
 }

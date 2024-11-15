@@ -1,5 +1,7 @@
 package com.loremipsum.lawconnectplatform.consultation.application.internal.commandservices;
 
+import com.loremipsum.lawconnectplatform.consultation.application.internal.outboundServices.ExternalCommunicationConsultationService;
+import com.loremipsum.lawconnectplatform.consultation.application.internal.outboundServices.ExternalLegalCaseConsultationService;
 import com.loremipsum.lawconnectplatform.consultation.application.internal.outboundServices.ExternalPaymentConsultationServices;
 import com.loremipsum.lawconnectplatform.consultation.application.internal.outboundServices.ExternalProfileConsultationService;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.aggregates.Consultation;
@@ -17,15 +19,22 @@ public class ConsultationCommandServiceImpl implements ConsultationCommandServic
     private final ConsultationRepository consultationRepository;
     private final ExternalPaymentConsultationServices externalPaymentConsultationServices;
     private final ExternalProfileConsultationService externalProfileConsultationService;
+    private final ExternalCommunicationConsultationService externalCommunicationConsultationService;
+    private final ExternalLegalCaseConsultationService externalLegalCaseConsultationService;
+
 
     public ConsultationCommandServiceImpl(
             ConsultationRepository consultationRepository,
-            ExternalPaymentConsultationServices externalPaymentConsultationServices1,
-            ExternalProfileConsultationService externalProfileConsultationService1
+            @Lazy ExternalPaymentConsultationServices externalPaymentConsultationServices1,
+            @Lazy ExternalProfileConsultationService externalProfileConsultationService1,
+            @Lazy ExternalCommunicationConsultationService externalCommunicationConsultationService,
+            @Lazy ExternalLegalCaseConsultationService externalLegalCaseConsultationService
     ) {
         this.consultationRepository = consultationRepository;
         this.externalPaymentConsultationServices = externalPaymentConsultationServices1;
         this.externalProfileConsultationService = externalProfileConsultationService1;
+        this.externalCommunicationConsultationService = externalCommunicationConsultationService;
+        this.externalLegalCaseConsultationService = externalLegalCaseConsultationService;
     }
 
     @Override
@@ -35,13 +44,17 @@ public class ConsultationCommandServiceImpl implements ConsultationCommandServic
 
         var payment = externalPaymentConsultationServices.createPayment(command.clientId(), lawyer.get().getPrices(), command.Currency());
 
-        var consultation = new Consultation(command, payment.get().getId());
+        var consultation = new Consultation(command, payment.get());
 
         try {
             consultationRepository.save(consultation);
         } catch (Exception e) {
             throw new IllegalArgumentException("Error saving consultation: " + e.getMessage());
         }
+
+        externalCommunicationConsultationService.createChatRoom(consultation.getId());
+
+        externalLegalCaseConsultationService.createLegalCase(command.title(),command.description(), consultation.getId());
 
         return consultation.getId();
     }

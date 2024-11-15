@@ -9,7 +9,9 @@ public class CreateConsultationCommandFromResourceAssembler {
                 resource.lawyerId(),
                 resource.clientId(),
                 resource.description(),
-                resource.Currency()
+                resource.Currency(),
+                resource.type(),
+                resource.title()
         );
     }
 }

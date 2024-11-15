@@ -70,8 +70,7 @@ public class ConsultationController {
 
     @GetMapping("/paymentId/{paymentId}")
     public ResponseEntity<List<ConsultationResource>> getAllConsultationsByPaymentId(@PathVariable Long paymentId){
-        var payment = new PaymentC(paymentId);
-        var getAllConsultationsByPaymentIdQuery = new GetAllConsultationsByPaymentIdQuery(payment);
+        var getAllConsultationsByPaymentIdQuery = new GetAllConsultationsByPaymentIdQuery(paymentId);
         var consultations = consultationQueryService.handle(getAllConsultationsByPaymentIdQuery);
         var consultationResources = consultations.stream().map(ConsultationResourceFromEntityAssembler::toResourceFromEntity).toList();
         return ResponseEntity.ok(consultationResources);

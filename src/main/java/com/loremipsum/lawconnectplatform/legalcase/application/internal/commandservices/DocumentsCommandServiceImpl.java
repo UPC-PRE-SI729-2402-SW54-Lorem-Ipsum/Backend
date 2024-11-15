@@ -1,5 +1,6 @@
 package com.loremipsum.lawconnectplatform.legalcase.application.internal.commandservices;
 
+import com.loremipsum.lawconnectplatform.legalcase.application.internal.outboundServices.ExternalConsultationLegalCaseService;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.commands.AddDocumentByLegalCaseIdCommand;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.commands.ChangeDocumentStatusCommand;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.entities.DocumentsItem;

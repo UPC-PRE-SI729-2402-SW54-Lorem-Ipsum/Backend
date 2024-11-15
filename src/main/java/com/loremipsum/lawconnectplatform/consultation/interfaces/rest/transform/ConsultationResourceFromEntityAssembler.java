@@ -8,9 +8,10 @@ public class ConsultationResourceFromEntityAssembler {
         return new ConsultationResource(
                 entity.getId(),
                 entity.getLawyerId(),
-                entity.getPaymentId(),
-                entity.getConsultationType().toString(),
-                entity.getDescription()
+                entity.getPayment(),
+                entity.getConsultationStatus().toString(),
+                entity.getDescription(),
+                entity.getConsultationType().toString()
         );
     }
 }

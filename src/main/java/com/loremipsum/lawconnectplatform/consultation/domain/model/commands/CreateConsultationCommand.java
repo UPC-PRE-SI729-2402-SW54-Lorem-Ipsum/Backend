@@ -4,6 +4,8 @@ public record CreateConsultationCommand(
         Long lawyerId,
         Long clientId,
         String description,
-        Integer Currency
+        Integer Currency,
+        Integer type,
+        String title
 ) {
 }

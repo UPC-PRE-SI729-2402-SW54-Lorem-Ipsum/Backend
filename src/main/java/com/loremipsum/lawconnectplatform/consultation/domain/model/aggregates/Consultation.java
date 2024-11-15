@@ -1,14 +1,14 @@
 package com.loremipsum.lawconnectplatform.consultation.domain.model.aggregates;
 
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.CreateConsultationCommand;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.events.CreateChatRoomEvent;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.events.CreateDefaultPaymentEvent;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.ConsultationStatus;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.ConsultationType;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.LawyerC;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.PaymentC;
+import com.loremipsum.lawconnectplatform.feeing.domain.model.aggregates.Payment;
 import com.loremipsum.lawconnectplatform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,37 +20,32 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
     @Embedded
     private LawyerC lawyerId;
 
-    @Embedded
-    private PaymentC paymentId;
+    @OneToOne
+    @JoinColumn(name = "payment", nullable = false)
+    private Payment payment;
 
     @Column(nullable = false)
-    // private ConsultationType consultationType;
-    private ConsultationStatus consultationType;
+    // private ConsultationType consultationStatus;
+    private ConsultationStatus consultationStatus;
 
     @Column(nullable = false)
     private String description;
 
+    private ConsultationType consultationType;
+
 
     public Consultation() {
         this.lawyerId = new LawyerC(null);
-        this.paymentId = new PaymentC(null);
         this.description = "";
     }
 
-    public Consultation(Long lawyerId, Long paymentId, String description){
-        this();
-        this.lawyerId = new LawyerC(lawyerId);
-        this.paymentId = new PaymentC(paymentId);
-        this.consultationType = ConsultationStatus.INACTIVE;
-        this.description = description;
-    }
-
-    public Consultation(CreateConsultationCommand command, Long paymentId){
+    public Consultation(CreateConsultationCommand command, Payment payment){
         this();
         this.lawyerId = new LawyerC(command.lawyerId());
-        this.paymentId = new PaymentC(paymentId);
-        this.consultationType = ConsultationStatus.INACTIVE;
+        this.payment = payment;
+        this.consultationStatus = ConsultationStatus.INACTIVE;
         this.description = command.description();
+        this.consultationType = ConsultationType.fromId(command.type());
     }
 
     public Long getLawyerId() {
@@ -58,15 +53,20 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
     }
 
     public Long getPaymentId() {
-        return this.paymentId.paymentId();
+        return this.payment.getId();
     }
 
     public void changeStatus() {
-        this.consultationType = ConsultationStatus.ACTIVE;
+        this.consultationStatus = ConsultationStatus.ACTIVE;
     }
 
     public void createDefaultPayment(Long clientId, Double amount, Integer currency) {
         this.registerEvent(new CreateDefaultPaymentEvent(this, clientId, amount, currency));
     }
 
+    public void createChatRoom(){
+        System.out.println("Creating chat room");
+        this.registerEvent(new CreateChatRoomEvent(this, this.getId()));
+        System.out.println("Chat room created");
+    }
 }

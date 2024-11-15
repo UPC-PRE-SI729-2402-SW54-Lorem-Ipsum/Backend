@@ -19,4 +19,8 @@ public class ExternalPaymentConsultationServices {
     public Optional<Payment> createPayment(Long clientId, Double amount, Integer status) {
         return paymentContextFacade.createPayment(clientId, amount, status);
     }
+
+    public Optional<Payment> getPaymentById(Long paymentId) {
+        return paymentContextFacade.getPaymentById(paymentId);
+    }
 }

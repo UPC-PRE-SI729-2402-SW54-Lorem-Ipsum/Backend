@@ -10,10 +10,9 @@ import java.util.Optional;
 @Service
 public class ExternalConsultationPaymentService {
 
-    private ConsultationContextFacade consultationContextFacade;
+    private final ConsultationContextFacade consultationContextFacade;
 
-    @Autowired
-    public void setConsultationContextFacade(ConsultationContextFacade consultationContextFacade) {
+    public ExternalConsultationPaymentService(ConsultationContextFacade consultationContextFacade) {
         this.consultationContextFacade = consultationContextFacade;
     }
 

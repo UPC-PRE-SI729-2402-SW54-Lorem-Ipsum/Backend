@@ -2,6 +2,7 @@ package com.loremipsum.lawconnectplatform.legalcase.interfaces.acl;
 
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.aggregates.LegalCase;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.commands.CreateLegalCaseCommand;
+import com.loremipsum.lawconnectplatform.legalcase.domain.model.commands.DeleteLegalCaseCommand;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.queries.GetLegalCaseByConsultationIdQuery;
 import com.loremipsum.lawconnectplatform.legalcase.domain.services.LegalCaseCommandService;
 import com.loremipsum.lawconnectplatform.legalcase.domain.services.LegalCaseQueryService;
@@ -39,6 +40,10 @@ public class LegalCaseContextFacade {
 
     public Optional<LegalCase> getLegalCaseByConsultationId(Long consultationId){
         return legalCaseQueryService.handle(new GetLegalCaseByConsultationIdQuery(consultationId));
+    }
+
+    public void deleteLegalCase(Long legalCaseId){
+        legalCaseCommandService.handle(new DeleteLegalCaseCommand(legalCaseId));
     }
 
 }

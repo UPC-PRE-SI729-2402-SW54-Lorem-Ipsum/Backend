@@ -1,6 +1,7 @@
 package com.loremipsum.lawconnectplatform.communication.interfaces.acl;
 
 import com.loremipsum.lawconnectplatform.communication.domain.model.commands.CreateChatRoomCommand;
+import com.loremipsum.lawconnectplatform.communication.domain.model.commands.DeleteChatRoomCommand;
 import com.loremipsum.lawconnectplatform.communication.domain.services.ChatRoomCommandService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,15 @@ public class CommunicationContextFacade {
             Long consultationId
     ){
         chatRoomCommandService.handle(new CreateChatRoomCommand(
+                        consultationId
+                )
+        );
+    }
+
+    public void deleteChatRoom(
+            Long consultationId
+    ){
+        chatRoomCommandService.handle(new DeleteChatRoomCommand(
                         consultationId
                 )
         );

@@ -2,9 +2,7 @@ package com.loremipsum.lawconnectplatform.consultation.application.internal.comm
 
 import com.loremipsum.lawconnectplatform.consultation.application.internal.outboundServices.*;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.aggregates.Consultation;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.ChangeConsultationStatusCommand;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.CreateConsultationCommand;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.DeleteConsultationCommand;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.*;
 import com.loremipsum.lawconnectplatform.consultation.domain.services.ConsultationCommandService;
 import com.loremipsum.lawconnectplatform.consultation.infrastructure.persistence.jpa.repositories.ConsultationRepository;
 
@@ -87,6 +85,51 @@ public class ConsultationCommandServiceImpl implements ConsultationCommandServic
             consultation.get().changeStatus();
         } catch (Exception e) {
             throw new IllegalArgumentException("Error while changing consultation status: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void handle(ApproveConsultationCommand command) {
+        var consultation = consultationRepository.findById(command.consultationId());
+        if (consultation.isEmpty()) {
+            throw new IllegalArgumentException("Consultation does not exist");
+        }
+        try {
+            var payment = externalPaymentConsultationServices.getPaymentById(consultation.get().getPaymentId());
+            externalFollowUpConsultationService.createNotification(
+                    "Consulta Aceptada",
+                    "La consulta ha sido aceptada",
+                    payment.get().getClientId(),
+                    command.consultationId()
+            );
+            consultation.get().setApplicationAccepted();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error while approving consultation: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void handle(RejectConsultationCommand command) {
+        var consultation = consultationRepository.findById(command.consultationId());
+        if (consultation.isEmpty()) {
+            throw new IllegalArgumentException("Consultation does not exist");
+        }
+        try {
+            var payment = externalPaymentConsultationServices.getPaymentById(consultation.get().getPaymentId());
+            externalFollowUpConsultationService.createNotification(
+                    "Consulta Rechazada",
+                    "La consulta ha sido rechazada",
+                    payment.get().getClientId(),
+                    command.consultationId()
+            );
+            consultation.get().setApplicationDenied();
+
+            externalCommunicationConsultationService.deleteChatRoom(consultation.get().getId());
+            externalLegalCaseConsultationService.deleteLegalCaseById(consultation.get().getId());
+            externalPaymentConsultationServices.deletePayment(consultation.get().getPaymentId());
+            consultationRepository.deleteById(consultation.get().getId());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error while rejecting consultation: " + e.getMessage());
         }
     }
 }

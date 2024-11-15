@@ -3,6 +3,7 @@ package com.loremipsum.lawconnectplatform.consultation.domain.model.aggregates;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.CreateConsultationCommand;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.events.CreateChatRoomEvent;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.events.CreateDefaultPaymentEvent;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.ApplicationStatus;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.ConsultationStatus;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.ConsultationType;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.LawyerC;
@@ -33,6 +34,7 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
 
     private ConsultationType consultationType;
 
+    private ApplicationStatus applicationStatus;
 
     public Consultation() {
         this.lawyerId = new LawyerC(null);
@@ -43,9 +45,10 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
         this();
         this.lawyerId = new LawyerC(command.lawyerId());
         this.payment = payment;
-        this.consultationStatus = ConsultationStatus.INACTIVE;
+        this.consultationStatus = ConsultationStatus.UNPAID;
         this.description = command.description();
         this.consultationType = ConsultationType.fromId(command.type());
+        this.applicationStatus = ApplicationStatus.PENDING;
     }
 
     public Long getLawyerId() {
@@ -57,7 +60,15 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
     }
 
     public void changeStatus() {
-        this.consultationStatus = ConsultationStatus.ACTIVE;
+        this.consultationStatus = ConsultationStatus.PAID;
+    }
+
+    public void setApplicationAccepted() {
+        this.applicationStatus = ApplicationStatus.APPROVED;
+    }
+
+    public void setApplicationDenied() {
+        this.applicationStatus = ApplicationStatus.REJECTED;
     }
 
     public void createDefaultPayment(Long clientId, Double amount, Integer currency) {

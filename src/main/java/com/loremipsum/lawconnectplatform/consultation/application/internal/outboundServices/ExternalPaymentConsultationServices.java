@@ -23,4 +23,8 @@ public class ExternalPaymentConsultationServices {
     public Optional<Payment> getPaymentById(Long paymentId) {
         return paymentContextFacade.getPaymentById(paymentId);
     }
+
+    public void deletePayment(Long paymentId) {
+        paymentContextFacade.deletePaymentById(paymentId);
+    }
 }

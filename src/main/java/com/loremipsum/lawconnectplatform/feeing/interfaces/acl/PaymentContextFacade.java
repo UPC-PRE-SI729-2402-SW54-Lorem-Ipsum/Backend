@@ -2,6 +2,7 @@ package com.loremipsum.lawconnectplatform.feeing.interfaces.acl;
 
 import com.loremipsum.lawconnectplatform.feeing.domain.model.aggregates.Payment;
 import com.loremipsum.lawconnectplatform.feeing.domain.model.commands.CreatePaymentCommand;
+import com.loremipsum.lawconnectplatform.feeing.domain.model.commands.DeletePaymentCommand;
 import com.loremipsum.lawconnectplatform.feeing.domain.model.queries.GetPaymentByIdQuery;
 import com.loremipsum.lawconnectplatform.feeing.domain.services.PaymentCommandService;
 import com.loremipsum.lawconnectplatform.feeing.domain.services.PaymentQueryService;
@@ -32,5 +33,9 @@ public class PaymentContextFacade {
 
     public Optional<Payment> getPaymentById(Long paymentId){
         return paymentQueryService.handle(new GetPaymentByIdQuery(paymentId));
+    }
+
+    public void deletePaymentById(Long paymentId){
+        paymentCommandService.handle(new DeletePaymentCommand(paymentId));
     }
 }

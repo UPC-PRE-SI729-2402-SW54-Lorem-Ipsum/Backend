@@ -2,6 +2,7 @@ package com.loremipsum.lawconnectplatform.legalcase.interfaces.rest;
 
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.commands.CloseLegalCaseCommand;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.queries.GetAllLegalCasesQuery;
+import com.loremipsum.lawconnectplatform.legalcase.domain.model.queries.GetLegalCaseByConsultationIdQuery;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.queries.GetLegalCaseByIdQuery;
 import com.loremipsum.lawconnectplatform.legalcase.domain.services.LegalCaseCommandService;
 import com.loremipsum.lawconnectplatform.legalcase.domain.services.LegalCaseQueryService;
@@ -63,5 +64,16 @@ public class LegalCaseController {
     public ResponseEntity<?> closeLegalCase(@PathVariable Long legalCaseId){
         legalCaseCommandService.handle(new CloseLegalCaseCommand(legalCaseId));
         return ResponseEntity.ok("Legal Case Closed Successfully");
+    }
+
+    @GetMapping("/consultation/{consultationId}")
+    public ResponseEntity<LegalCaseResource> getLegalCaseByConsultationId(@PathVariable Long consultationId){
+        var getLegalCaseByConsultationIdQuery = new GetLegalCaseByConsultationIdQuery(consultationId);
+        var legalCase = legalCaseQueryService.handle(getLegalCaseByConsultationIdQuery);
+        if(legalCase.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        var legalCaseResource = LegalCaseResourceFromEntityAssembler.toEntityFromResource(legalCase.get());
+        return ResponseEntity.ok(legalCaseResource);
     }
 }

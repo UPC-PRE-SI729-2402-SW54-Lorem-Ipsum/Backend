@@ -10,7 +10,7 @@ public class NotificationResourceFromEntityAssembler {
                 entity.getTitle(),
                 entity.getDescription(),
                 entity.getClientId(),
-                entity.getLegalCaseId()
+                entity.getConsultationId()
         );
     }
 }

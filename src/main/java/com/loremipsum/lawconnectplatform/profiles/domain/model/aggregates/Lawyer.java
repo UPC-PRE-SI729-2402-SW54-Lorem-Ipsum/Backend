@@ -2,9 +2,7 @@ package com.loremipsum.lawconnectplatform.profiles.domain.model.aggregates;
 
 import com.loremipsum.lawconnectplatform.profiles.domain.model.commands.AddLawyerPricesCommand;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.commands.AddLawyerTypeCommand;
-import com.loremipsum.lawconnectplatform.profiles.domain.model.commands.CreateLawyerCommand;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.valueobjects.LawyerType;
-import com.loremipsum.lawconnectplatform.profiles.domain.model.valueobjects.Prices;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,8 +25,7 @@ public class Lawyer {
     @Setter
     private Set<LawyerType> lawyerTypes = new HashSet<>();
 
-    @Embedded
-    private Prices prices;
+    private Double prices;
 
     @OneToOne
     @JoinColumn(name = "profile", nullable = false)
@@ -36,8 +33,8 @@ public class Lawyer {
     private Profile profile;
 
     public Lawyer() {
-        this.prices = new Prices();
         this.lawyerTypes = new HashSet<>();
+        this.prices = 0.0;
     }
 
     public Lawyer(Profile profile) {
@@ -46,7 +43,7 @@ public class Lawyer {
     }
 
     public void setPrices(AddLawyerPricesCommand command) {
-        this.prices = new Prices(command.chatPrice(), command.videoCallPrice(), command.faceToFacePrice());
+        this.prices = command.price();
     }
 
     public void addLawyerType(AddLawyerTypeCommand command) {

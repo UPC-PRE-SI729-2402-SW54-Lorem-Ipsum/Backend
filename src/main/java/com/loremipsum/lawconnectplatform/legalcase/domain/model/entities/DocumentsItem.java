@@ -14,10 +14,6 @@ import lombok.Setter;
 @Entity
 public class DocumentsItem extends AuditableModel {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(nullable = false)
     private String title;
 

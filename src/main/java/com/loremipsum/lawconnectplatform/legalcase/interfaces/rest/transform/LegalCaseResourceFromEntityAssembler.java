@@ -10,7 +10,7 @@ public class LegalCaseResourceFromEntityAssembler {
                 entity.getTitle(),
                 entity.getDescription(),
                 entity.getStatus().name(),
-                entity.getConsultationId(),
+                entity.getConsultation(),
                 entity.getDocuments().getDocumentsItems().stream().map(DocumentsItemResourceFromEntityAssembler::toEntityFromResource).toList()
         );
     }

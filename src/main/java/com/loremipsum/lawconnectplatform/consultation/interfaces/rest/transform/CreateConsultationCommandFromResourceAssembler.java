@@ -7,9 +7,11 @@ public class CreateConsultationCommandFromResourceAssembler {
     public static CreateConsultationCommand toCommandFromResource(CreateConsultationResource resource){
         return new CreateConsultationCommand(
                 resource.lawyerId(),
-                resource.paymentId(),
-                resource.consultationType(),
-                resource.description()
+                resource.clientId(),
+                resource.description(),
+                resource.Currency(),
+                resource.type(),
+                resource.title()
         );
     }
 }

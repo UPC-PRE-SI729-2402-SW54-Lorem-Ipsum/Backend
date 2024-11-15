@@ -1,6 +1,8 @@
 package com.loremipsum.lawconnectplatform.consultation.domain.model.aggregates;
 
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.CreateConsultationCommand;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.events.CreateDefaultPaymentEvent;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.ConsultationStatus;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.LawyerC;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.PaymentC;
 import com.loremipsum.lawconnectplatform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
@@ -23,7 +25,7 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
 
     @Column(nullable = false)
     // private ConsultationType consultationType;
-    private String consultationType;
+    private ConsultationStatus consultationType;
 
     @Column(nullable = false)
     private String description;
@@ -32,23 +34,22 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
     public Consultation() {
         this.lawyerId = new LawyerC(null);
         this.paymentId = new PaymentC(null);
-        this.consultationType = "";
         this.description = "";
     }
 
-    public Consultation(Long lawyerId, Long paymentId, String consultationType, String description){
+    public Consultation(Long lawyerId, Long paymentId, String description){
         this();
         this.lawyerId = new LawyerC(lawyerId);
         this.paymentId = new PaymentC(paymentId);
-        this.consultationType = consultationType;
+        this.consultationType = ConsultationStatus.INACTIVE;
         this.description = description;
     }
 
-    public Consultation(CreateConsultationCommand command){
+    public Consultation(CreateConsultationCommand command, Long paymentId){
         this();
         this.lawyerId = new LawyerC(command.lawyerId());
-        this.paymentId = new PaymentC(command.paymentId());
-        this.consultationType = command.consultationType();
+        this.paymentId = new PaymentC(paymentId);
+        this.consultationType = ConsultationStatus.INACTIVE;
         this.description = command.description();
     }
 
@@ -58,6 +59,14 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
 
     public Long getPaymentId() {
         return this.paymentId.paymentId();
+    }
+
+    public void changeStatus() {
+        this.consultationType = ConsultationStatus.ACTIVE;
+    }
+
+    public void createDefaultPayment(Long clientId, Double amount, Integer currency) {
+        this.registerEvent(new CreateDefaultPaymentEvent(this, clientId, amount, currency));
     }
 
 }

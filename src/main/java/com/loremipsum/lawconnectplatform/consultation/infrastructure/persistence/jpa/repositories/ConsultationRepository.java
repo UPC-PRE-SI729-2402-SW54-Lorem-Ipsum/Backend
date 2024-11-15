@@ -16,4 +16,5 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
     List<Consultation> findAllByPaymentId(PaymentC paymentId);
     List<Consultation> findAllByPaymentIdAndLawyerId(PaymentC paymentId, LawyerC lawyerId);
     Optional<Consultation> findByPaymentIdAndLawyerId(PaymentC paymentC, LawyerC lawyerC);
+    Optional<Consultation> findByPaymentId(PaymentC paymentC);
 }

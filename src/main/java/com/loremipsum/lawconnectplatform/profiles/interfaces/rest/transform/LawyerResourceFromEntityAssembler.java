@@ -13,13 +13,12 @@ public class LawyerResourceFromEntityAssembler {
                 .map(LawyerType::name)
                 .collect(Collectors.toSet());
 
-        Set<String> pricesStrings = entity.getPrices().toStringSet();
 
         return new LawyerResource(
                 entity.getId(),
                 entity.getProfile(),
                 lawyerTypeStrings,
-                pricesStrings
+                entity.getPrices()
         );
     }
 }

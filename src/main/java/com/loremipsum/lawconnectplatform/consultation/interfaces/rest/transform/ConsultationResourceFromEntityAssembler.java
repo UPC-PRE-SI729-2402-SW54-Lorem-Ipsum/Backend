@@ -9,7 +9,7 @@ public class ConsultationResourceFromEntityAssembler {
                 entity.getId(),
                 entity.getLawyerId(),
                 entity.getPaymentId(),
-                entity.getConsultationType(),
+                entity.getConsultationType().toString(),
                 entity.getDescription()
         );
     }

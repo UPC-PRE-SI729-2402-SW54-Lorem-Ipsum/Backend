@@ -1,10 +1,8 @@
 package com.loremipsum.lawconnectplatform.consultation.application.internal.queryservices;
 
 import com.loremipsum.lawconnectplatform.consultation.domain.model.aggregates.Consultation;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetAllConsultationsByLawyerIdQuery;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetAllConsultationsByPaymentIdQuery;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetConsultationByIdQuery;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetConsultationByLawyerIdAndPaymentIdQuery;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.*;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.PaymentC;
 import com.loremipsum.lawconnectplatform.consultation.domain.services.ConsultationQueryService;
 import com.loremipsum.lawconnectplatform.consultation.infrastructure.persistence.jpa.repositories.ConsultationRepository;
 import org.springframework.stereotype.Service;
@@ -29,6 +27,17 @@ public class ConsultationQueryServiceImpl implements ConsultationQueryService {
     @Override
     public Optional<Consultation> handle(GetConsultationByLawyerIdAndPaymentIdQuery query) {
         return consultationRepository.findByPaymentIdAndLawyerId(query.paymentId(), query.lawyerId());
+    }
+
+    @Override
+    public Optional<Consultation> handle(GetConsultationByPaymentIdQuery query) {
+        return consultationRepository.findByPaymentId(new PaymentC(query.PaymentId()));
+    }
+
+    @Override
+    public Optional<Long> handle(GetPaymentIdByConsultationIdQuery query) {
+        var paymentId = consultationRepository.findById(query.consultationId()).get().getPaymentId().longValue();
+        return Optional.of(paymentId);
     }
 
     @Override

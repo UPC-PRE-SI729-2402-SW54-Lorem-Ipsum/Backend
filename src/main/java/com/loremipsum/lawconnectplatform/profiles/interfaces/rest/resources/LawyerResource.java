@@ -8,6 +8,6 @@ public record LawyerResource(
         Long id,
         Profile profile,
         Set<String> lawyerTypes,
-        Set<String> Prices
+        Double Prices
 ) {
 }

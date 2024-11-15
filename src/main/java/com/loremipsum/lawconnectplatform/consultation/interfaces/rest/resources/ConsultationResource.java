@@ -4,7 +4,7 @@ public record ConsultationResource(
         Long id,
         Long lawyerId,
         Long paymentId,
-        String consultationType,
+        String consultationStatus,
         String description
 ) {
 }

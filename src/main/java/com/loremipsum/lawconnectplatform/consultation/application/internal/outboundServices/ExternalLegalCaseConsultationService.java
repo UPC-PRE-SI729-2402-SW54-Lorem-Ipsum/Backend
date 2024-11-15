@@ -1,5 +1,6 @@
 package com.loremipsum.lawconnectplatform.consultation.application.internal.outboundServices;
 
+import com.loremipsum.lawconnectplatform.legalcase.domain.model.aggregates.LegalCase;
 import com.loremipsum.lawconnectplatform.legalcase.interfaces.acl.LegalCaseContextFacade;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +25,9 @@ public class ExternalLegalCaseConsultationService {
                 description,
                 consultationId
             );
+    }
+
+    public Optional<LegalCase> getLegalCaseByConsultationId(Long consultationId){
+        return legalCaseContextFacade.getLegalCaseByConsultationId(consultationId);
     }
 }

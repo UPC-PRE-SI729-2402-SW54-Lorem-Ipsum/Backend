@@ -1,7 +1,7 @@
 package com.loremipsum.lawconnectplatform.followup.application.internal.queryservices;
 
 import com.loremipsum.lawconnectplatform.followup.domain.model.aggregates.Notification;
-import com.loremipsum.lawconnectplatform.followup.domain.model.queries.GetAllNotificationByLegalCaseIdQuery;
+import com.loremipsum.lawconnectplatform.followup.domain.model.queries.GetAllNotificationByConsultationIdQuery;
 import com.loremipsum.lawconnectplatform.followup.domain.model.queries.GetAllNotificationsByClientIdQuery;
 import com.loremipsum.lawconnectplatform.followup.domain.model.queries.GetNotificationByIdQuery;
 import com.loremipsum.lawconnectplatform.followup.domain.services.NotificationQueryService;
@@ -26,8 +26,8 @@ public class NotificationQueryServiceImpl implements NotificationQueryService {
     }
 
     @Override
-    public List<Notification> handle(GetAllNotificationByLegalCaseIdQuery query) {
-        return notificationRepository.findAllByLegalCaseId(query.legalCaseId());
+    public List<Notification> handle(GetAllNotificationByConsultationIdQuery query) {
+        return notificationRepository.findAllByConsultationId(query.consultationId());
     }
 
     @Override

@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    List<Notification> findAllByLegalCaseId(Long legalCaseId);
+    List<Notification> findAllByConsultationId(Long consultationId);
     List<Notification> findAllByClientId(Long clientId);
 }

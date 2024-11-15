@@ -1,9 +1,6 @@
 package com.loremipsum.lawconnectplatform.consultation.application.internal.commandservices;
 
-import com.loremipsum.lawconnectplatform.consultation.application.internal.outboundServices.ExternalCommunicationConsultationService;
-import com.loremipsum.lawconnectplatform.consultation.application.internal.outboundServices.ExternalLegalCaseConsultationService;
-import com.loremipsum.lawconnectplatform.consultation.application.internal.outboundServices.ExternalPaymentConsultationServices;
-import com.loremipsum.lawconnectplatform.consultation.application.internal.outboundServices.ExternalProfileConsultationService;
+import com.loremipsum.lawconnectplatform.consultation.application.internal.outboundServices.*;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.aggregates.Consultation;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.ChangeConsultationStatusCommand;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.CreateConsultationCommand;
@@ -21,20 +18,22 @@ public class ConsultationCommandServiceImpl implements ConsultationCommandServic
     private final ExternalProfileConsultationService externalProfileConsultationService;
     private final ExternalCommunicationConsultationService externalCommunicationConsultationService;
     private final ExternalLegalCaseConsultationService externalLegalCaseConsultationService;
-
+    private final ExternalFollowUpConsultationService externalFollowUpConsultationService;
 
     public ConsultationCommandServiceImpl(
             ConsultationRepository consultationRepository,
             @Lazy ExternalPaymentConsultationServices externalPaymentConsultationServices1,
             @Lazy ExternalProfileConsultationService externalProfileConsultationService1,
             @Lazy ExternalCommunicationConsultationService externalCommunicationConsultationService,
-            @Lazy ExternalLegalCaseConsultationService externalLegalCaseConsultationService
+            @Lazy ExternalLegalCaseConsultationService externalLegalCaseConsultationService,
+            @Lazy ExternalFollowUpConsultationService externalFollowUpConsultationService
     ) {
         this.consultationRepository = consultationRepository;
         this.externalPaymentConsultationServices = externalPaymentConsultationServices1;
         this.externalProfileConsultationService = externalProfileConsultationService1;
         this.externalCommunicationConsultationService = externalCommunicationConsultationService;
         this.externalLegalCaseConsultationService = externalLegalCaseConsultationService;
+        this.externalFollowUpConsultationService = externalFollowUpConsultationService;
     }
 
     @Override
@@ -78,6 +77,13 @@ public class ConsultationCommandServiceImpl implements ConsultationCommandServic
             throw new IllegalArgumentException("Consultation does not exist");
         }
         try {
+            var payment = externalPaymentConsultationServices.getPaymentById(consultation.get().getPaymentId());
+            externalFollowUpConsultationService.createNotification(
+                    "Pago Aceptado",
+                    "Ahora la consulta se encuentra pagada",
+                    payment.get().getClientId(),
+                    command.id()
+            );
             consultation.get().changeStatus();
         } catch (Exception e) {
             throw new IllegalArgumentException("Error while changing consultation status: " + e.getMessage());

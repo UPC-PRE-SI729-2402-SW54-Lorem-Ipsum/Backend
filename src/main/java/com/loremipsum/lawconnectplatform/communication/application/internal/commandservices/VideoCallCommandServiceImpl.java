@@ -1,6 +1,8 @@
 package com.loremipsum.lawconnectplatform.communication.application.internal.commandservices;
 
 import com.loremipsum.lawconnectplatform.communication.application.internal.outboundServices.ExternalConsultationCommunicationService;
+import com.loremipsum.lawconnectplatform.communication.application.internal.outboundServices.ExternalFollowUpCommunicationService;
+import com.loremipsum.lawconnectplatform.communication.application.internal.outboundServices.ExternalPaymentCommunicationService;
 import com.loremipsum.lawconnectplatform.communication.domain.model.aggregates.VideoCall;
 import com.loremipsum.lawconnectplatform.communication.domain.model.commands.CreateVideoCallCommand;
 import com.loremipsum.lawconnectplatform.communication.domain.services.VideoCallCommandService;
@@ -14,10 +16,14 @@ public class VideoCallCommandServiceImpl implements VideoCallCommandService {
 
     private final VideoCallRepository videoCallRepository;
     private final ExternalConsultationCommunicationService externalConsultationCommunicationService;
+    private final ExternalFollowUpCommunicationService externalFollowUpCommunicationService;
+    private final ExternalPaymentCommunicationService externalPaymentCommunicationService;
 
-    public VideoCallCommandServiceImpl(VideoCallRepository videoCallRepository, ExternalConsultationCommunicationService externalConsultationCommunicationService) {
+    public VideoCallCommandServiceImpl(VideoCallRepository videoCallRepository, ExternalConsultationCommunicationService externalConsultationCommunicationService, ExternalFollowUpCommunicationService externalFollowUpCommunicationService, ExternalPaymentCommunicationService externalPaymentCommunicationService) {
         this.videoCallRepository = videoCallRepository;
         this.externalConsultationCommunicationService = externalConsultationCommunicationService;
+        this.externalFollowUpCommunicationService = externalFollowUpCommunicationService;
+        this.externalPaymentCommunicationService = externalPaymentCommunicationService;
     }
 
     @Override
@@ -29,9 +35,18 @@ public class VideoCallCommandServiceImpl implements VideoCallCommandService {
             throw new IllegalArgumentException("Consultation not found");
         }
 
+        var payment = externalPaymentCommunicationService.getPaymentById(consultation.get().getPaymentId());
+
         var VideoCall = new VideoCall(command, consultation.get());
 
         videoCallRepository.save(VideoCall);
+
+        externalFollowUpCommunicationService.createNotification(
+                "Video Call created",
+                command.description(),
+                payment.get().getClientId(),
+                consultation.get().getId()
+        );
 
         return Optional.of(VideoCall);
     }

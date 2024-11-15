@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 @Getter
-public class CreateChatRoomEvent extends ApplicationEvent {
+public final class CreateChatRoomEvent extends ApplicationEvent {
 
     private Long consultationId;
 

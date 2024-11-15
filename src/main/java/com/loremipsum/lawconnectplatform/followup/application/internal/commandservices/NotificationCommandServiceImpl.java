@@ -2,6 +2,7 @@ package com.loremipsum.lawconnectplatform.followup.application.internal.commands
 
 import com.loremipsum.lawconnectplatform.followup.domain.model.aggregates.Notification;
 import com.loremipsum.lawconnectplatform.followup.domain.model.commands.CreateNotificationCommand;
+import com.loremipsum.lawconnectplatform.followup.domain.model.commands.DeleteNotificationCommand;
 import com.loremipsum.lawconnectplatform.followup.domain.services.NotificationCommandService;
 import com.loremipsum.lawconnectplatform.followup.infrastructure.persistence.jpa.repositories.NotificationRepository;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,10 @@ public class NotificationCommandServiceImpl implements NotificationCommandServic
         notificationRepository.save(notification);
 
         return Optional.of(notification);
+    }
+
+    @Override
+    public void handle(DeleteNotificationCommand command) {
+        notificationRepository.deleteById(command.notificationId());
     }
 }

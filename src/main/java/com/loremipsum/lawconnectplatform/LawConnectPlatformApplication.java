@@ -7,7 +7,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableJpaAuditing
 @SpringBootApplication
-@EnableAsync
 public class LawConnectPlatformApplication {
 
     public static void main(String[] args) {

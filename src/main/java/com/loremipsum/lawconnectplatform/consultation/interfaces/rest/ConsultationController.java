@@ -1,6 +1,8 @@
 package com.loremipsum.lawconnectplatform.consultation.interfaces.rest;
 
+import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.ApproveConsultationCommand;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.DeleteConsultationCommand;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.RejectConsultationCommand;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetAllConsultationsByLawyerIdQuery;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetAllPaymentsByConsultationIdQuery;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetConsultationByIdQuery;
@@ -82,4 +84,17 @@ public class ConsultationController {
         consultationCommandService.handle(createPaymentCommand);
         return ResponseEntity.ok("Payment added successfully");
     }
+
+    @PatchMapping("/{consultationId}")
+    public ResponseEntity<?> approveConsultation(@PathVariable Long consultationId){
+        consultationCommandService.handle(new ApproveConsultationCommand(consultationId));
+        return ResponseEntity.ok("Consultation approved successfully");
+    }
+
+    @PatchMapping("/{consultationId}")
+    public ResponseEntity<?> declineConsultation(@PathVariable Long consultationId){
+        consultationCommandService.handle(new RejectConsultationCommand(consultationId));
+        return ResponseEntity.ok("Consultation approved successfully");
+    }
+
 }

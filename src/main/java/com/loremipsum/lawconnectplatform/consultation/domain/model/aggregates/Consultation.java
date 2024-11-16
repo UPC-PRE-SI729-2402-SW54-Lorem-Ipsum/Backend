@@ -29,7 +29,6 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
     @OneToMany(mappedBy = "consultation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Payment> payments = new ArrayList<>();
 
-
     @Column(nullable = false)
     @Size(max = 500)
     private String description;

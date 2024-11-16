@@ -1,5 +1,6 @@
 package com.loremipsum.lawconnectplatform.profiles.application.internal.commandservices;
 
+import com.loremipsum.lawconnectplatform.profiles.application.internal.outboundServices.ExternalIAMProfileService;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.aggregates.Lawyer;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.aggregates.Profile;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.commands.AddLawyerPricesCommand;
@@ -18,10 +19,13 @@ public class LawyerCommandServiceImpl implements LawyerCommandService {
 
     private final LawyerRepository lawyerRepository;
     private final ProfileRepository profileRepository;
+    private final ExternalIAMProfileService externalIAMProfileService;
 
-    public LawyerCommandServiceImpl(LawyerRepository lawyerRepository, ProfileRepository profileRepository) {
+
+    public LawyerCommandServiceImpl(LawyerRepository lawyerRepository, ProfileRepository profileRepository, ExternalIAMProfileService externalIAMProfileService) {
         this.lawyerRepository = lawyerRepository;
         this.profileRepository = profileRepository;
+        this.externalIAMProfileService = externalIAMProfileService;
     }
 
     @Override
@@ -31,7 +35,8 @@ public class LawyerCommandServiceImpl implements LawyerCommandService {
         var profile = new Profile();
 
         if (profileId.isEmpty()) {
-            profile = new Profile(command);
+            var userId = externalIAMProfileService.getUserIdByUsername(command.email());
+            profile = new Profile(command, userId);
         } else {
             throw new IllegalArgumentException("Lawyer already exists");
         }

@@ -1,20 +1,22 @@
 package com.loremipsum.lawconnectplatform.profiles.domain.model.aggregates;
 
+import com.loremipsum.lawconnectplatform.iam.domain.model.aggregates.User;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.commands.CreateClientCommand;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.commands.CreateLawyerCommand;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.commands.CreateProfileCommand;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.valueobjects.EmailAddress;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.valueobjects.PersonName;
 import com.loremipsum.lawconnectplatform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Entity
 public class Profile extends AuditableAbstractAggregateRoot<Profile> {
+
+    private Long userId;
 
     @Embedded
     private PersonName name;
@@ -53,22 +55,24 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
         this.image_url = command.image_url();
     }
 
-    public Profile(CreateClientCommand command) {
+    public Profile(CreateClientCommand command, Long user) {
         this.name = new PersonName(command.firstName(), command.lastName());
         this.email = new EmailAddress(command.email());
         this.phoneNumber = command.phoneNumber();
         this.address = command.address();
         this.DNI = command.dni();
         this.image_url = command.image_url();
+        this.userId = user;
     }
 
-    public Profile(CreateLawyerCommand command) {
+    public Profile(CreateLawyerCommand command, Long user) {
         this.name = new PersonName(command.firstName(), command.lastName());
         this.email = new EmailAddress(command.email());
         this.phoneNumber = command.phoneNumber();
         this.address = command.address();
         this.DNI = command.dni();
         this.image_url = command.image_url();
+        this.userId = user;
     }
     public Profile() {
 

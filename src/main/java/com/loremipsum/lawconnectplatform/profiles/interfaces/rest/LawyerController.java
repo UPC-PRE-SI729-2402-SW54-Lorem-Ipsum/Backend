@@ -3,6 +3,7 @@ package com.loremipsum.lawconnectplatform.profiles.interfaces.rest;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.commands.AddLawyerTypeCommand;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.queries.GetAllLawyersQuery;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.queries.GetLawyerByIdQuery;
+import com.loremipsum.lawconnectplatform.profiles.domain.model.queries.GetLawyerIdByEmailQuery;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.queries.GetLawyerTypeByIdQuery;
 import com.loremipsum.lawconnectplatform.profiles.domain.services.LawyerCommandService;
 import com.loremipsum.lawconnectplatform.profiles.domain.services.LawyerQueryService;
@@ -83,5 +84,11 @@ public class LawyerController {
         var lawyer = lawyerQueryService.handle(new GetLawyerByIdQuery(resource.lawyerId()));
         var lawyerResource = LawyerResourceFromEntityAssembler.ToEntityFromResource(lawyer.get());
         return ResponseEntity.ok(lawyerResource);
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<Long> getLawyerByEmail(@PathVariable String email){
+        var lawyer = lawyerQueryService.handle(new GetLawyerIdByEmailQuery(email));
+        return lawyer.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

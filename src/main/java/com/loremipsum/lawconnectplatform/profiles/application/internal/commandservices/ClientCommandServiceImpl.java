@@ -1,5 +1,6 @@
 package com.loremipsum.lawconnectplatform.profiles.application.internal.commandservices;
 
+import com.loremipsum.lawconnectplatform.profiles.application.internal.outboundServices.ExternalIAMProfileService;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.aggregates.Client;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.aggregates.Profile;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.commands.CreateClientCommand;
@@ -18,10 +19,12 @@ public class ClientCommandServiceImpl implements ClientCommandService {
 
     private final ProfileRepository profileRepository;
     private final ClientRepository clientRepository;
+    private final ExternalIAMProfileService externalIAMProfileService;
 
-    public ClientCommandServiceImpl(ProfileRepository profileRepository, ClientRepository clientRepository) {
+    public ClientCommandServiceImpl(ProfileRepository profileRepository, ClientRepository clientRepository, ExternalIAMProfileService externalIAMProfileService) {
         this.profileRepository = profileRepository;
         this.clientRepository = clientRepository;
+        this.externalIAMProfileService = externalIAMProfileService;
     }
 
 
@@ -32,7 +35,8 @@ public class ClientCommandServiceImpl implements ClientCommandService {
         var profile = new Profile();
 
         if (profileId.isEmpty()) {
-            profile = new Profile(command);
+            var userId = externalIAMProfileService.getUserIdByUsername(command.email());
+            profile = new Profile(command, userId);
         } else {
             throw new IllegalArgumentException("Client already exists");
         }

@@ -4,6 +4,7 @@ import com.loremipsum.lawconnectplatform.feeing.application.internal.outboundSer
 import com.loremipsum.lawconnectplatform.feeing.domain.model.aggregates.Payment;
 import com.loremipsum.lawconnectplatform.feeing.domain.model.commands.CompletePaymentCommand;
 import com.loremipsum.lawconnectplatform.feeing.domain.model.commands.CreatePaymentCommand;
+import com.loremipsum.lawconnectplatform.feeing.domain.model.commands.DeletePaymentCommand;
 import com.loremipsum.lawconnectplatform.feeing.domain.model.valueObjects.PaymentStatus;
 import com.loremipsum.lawconnectplatform.feeing.domain.services.PaymentCommandService;
 import com.loremipsum.lawconnectplatform.feeing.infrastructure.persistence.jpa.repositories.PaymentRepository;
@@ -28,8 +29,9 @@ public class PaymentCommandServiceImpl implements PaymentCommandService {
 
     @Override
     public Optional<Payment> handle(CreatePaymentCommand command) {
-
-        var payment = new Payment(command);
+        var consultation = externalConsultationPaymentService.getConsultationById(command.consultationId());
+        var payment = new Payment(command, consultation.get());
+        System.out.println("Payment created");
         paymentRepository.save(payment);
         return Optional.of(payment);
     }
@@ -41,9 +43,7 @@ public class PaymentCommandServiceImpl implements PaymentCommandService {
             return Optional.empty();
         }
 
-        var paymentId = externalConsultationPaymentService.getPaymentIdByConsultationId(command.consultationId());
-
-        var payment = paymentRepository.findById(paymentId.get());
+        var payment = paymentRepository.findById(command.paymentId());
         if (payment.isEmpty()){
             return Optional.empty();
         }
@@ -56,5 +56,14 @@ public class PaymentCommandServiceImpl implements PaymentCommandService {
 
         paymentRepository.save(payment.get());
         return payment;
+    }
+
+    @Override
+    public void handle(DeletePaymentCommand command) {
+        var payment = paymentRepository.findById(command.PaymentId());
+        if (payment.isEmpty()) {
+            throw new IllegalArgumentException("Payment not found");
+        }
+        paymentRepository.deleteById(command.PaymentId());
     }
 }

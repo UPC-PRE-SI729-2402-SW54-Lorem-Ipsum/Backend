@@ -6,7 +6,8 @@ public record PaymentResource(
         Long id,
         Long clientId,
         String amount,
-        PaymentStatus status
+        PaymentStatus status,
+        Long consultationId
 ){
 
 }

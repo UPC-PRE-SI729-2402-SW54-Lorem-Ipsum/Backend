@@ -16,6 +16,6 @@ public class CreateDefaultPaymentHandler {
 
     @EventListener(CreateDefaultPaymentEvent.class)
     public void on(CreateDefaultPaymentEvent event) {
-        externalPaymentConsultationServices.createPayment(event.getClientId(), event.getAmount(), event.getCurrency());
+        externalPaymentConsultationServices.createPayment(event.getConsultationId() ,event.getClientId(), event.getAmount(), event.getCurrency());
     }
 }

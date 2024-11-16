@@ -11,9 +11,9 @@ public class CreateLawyerCommandFromResourceAssembler {
                 resource.lastName(),
                 resource.email(),
                 resource.phoneNumber(),
+                resource.address(),
                 resource.dni(),
-                resource.image_url(),
-                resource.address()
+                resource.image_url()
         );
     }
 }

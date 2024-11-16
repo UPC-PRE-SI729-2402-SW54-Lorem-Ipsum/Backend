@@ -13,7 +13,5 @@ import java.util.Optional;
 @Repository
 public interface ConsultationRepository extends JpaRepository<Consultation, Long> {
     List<Consultation> findAllByLawyerId(LawyerC lawyerId);
-    List<Consultation> findAllByPayment(Payment payment);
-    Optional<Consultation> findByPaymentAndLawyerId(Payment payment, LawyerC lawyerC);
-    Optional<Consultation> findByPayment(Payment payment);
+    Optional<Consultation> findByPayments(List<Payment> payment);
 }

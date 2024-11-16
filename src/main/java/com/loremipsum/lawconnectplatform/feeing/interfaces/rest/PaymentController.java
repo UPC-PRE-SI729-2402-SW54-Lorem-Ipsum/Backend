@@ -1,8 +1,7 @@
 package com.loremipsum.lawconnectplatform.feeing.interfaces.rest;
 
-import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetPaymentIdByConsultationIdQuery;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetAllPaymentsByConsultationIdQuery;
 import com.loremipsum.lawconnectplatform.feeing.domain.model.queries.GetAllPaymentByClientIdQuery;
-import com.loremipsum.lawconnectplatform.feeing.domain.model.queries.GetPaymentByConsultationIdQuery;
 import com.loremipsum.lawconnectplatform.feeing.domain.model.queries.GetPaymentByIdQuery;
 import com.loremipsum.lawconnectplatform.feeing.domain.services.PaymentCommandService;
 import com.loremipsum.lawconnectplatform.feeing.domain.services.PaymentQueryService;
@@ -36,9 +35,9 @@ public class PaymentController {
     }
 
     @Operation(summary = "Complete consultation Payment")
-    @PatchMapping(value = "/project/{consultationId}")
-    public ResponseEntity<PaymentResource> completePayment(@RequestBody CompletePaymentResource resource, @PathVariable Long consultationId) {
-        var command = CompletePaymentCommandFromResourceAssembler.toCommandFromResource(resource, consultationId);
+    @PatchMapping(value = "/project/{paymentId}")
+    public ResponseEntity<PaymentResource> completePayment(@RequestBody CompletePaymentResource resource, @PathVariable Long paymentId) {
+        var command = CompletePaymentCommandFromResourceAssembler.toCommandFromResource(resource, paymentId);
         var payment = paymentCommandService.handle(command);
         if (payment.isEmpty()){
             return ResponseEntity.notFound().build();
@@ -49,13 +48,14 @@ public class PaymentController {
 
     @Operation(summary = "Get Payment Id By Consultation Id")
     @GetMapping(value = "/project/{consultationId}")
-    public ResponseEntity<PaymentResource> getPaymentByConsultationId(@PathVariable Long consultationId) {
-        var paymentId = paymentQueryService.handle(new GetPaymentIdByConsultationIdQuery(consultationId));
-        if (paymentId.isEmpty()){
+    public ResponseEntity<List<PaymentResource>> getAllPaymentsByConsultationId(@PathVariable Long consultationId) {
+        var payment = paymentQueryService.handle(new GetAllPaymentsByConsultationIdQuery(consultationId));
+        if (payment.isEmpty()){
             return ResponseEntity.notFound().build();
         }
-        var payment = paymentQueryService.handle(new GetPaymentByIdQuery(paymentId.get()));
-        var paymentResource = PaymentResourceFromEntityAssembler.toResourceFromEntity(payment.get());
+        var paymentResource = payment.stream()
+                .map(PaymentResourceFromEntityAssembler::toResourceFromEntity)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(paymentResource);
     }
 

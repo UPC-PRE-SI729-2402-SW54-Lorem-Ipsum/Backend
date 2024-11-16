@@ -1,6 +1,6 @@
 package com.loremipsum.lawconnectplatform.feeing.application.internal.queryServices;
 
-import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetPaymentIdByConsultationIdQuery;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetAllPaymentsByConsultationIdQuery;
 import com.loremipsum.lawconnectplatform.feeing.application.internal.outboundServices.ExternalConsultationPaymentService;
 import com.loremipsum.lawconnectplatform.feeing.domain.model.aggregates.Payment;
 import com.loremipsum.lawconnectplatform.feeing.domain.model.queries.GetAllPaymentByClientIdQuery;
@@ -23,8 +23,9 @@ public class PaymentQueryServiceImpl implements PaymentQueryService {
     }
 
     @Override
-    public Optional<Long> handle(GetPaymentIdByConsultationIdQuery query) {
-        return externalConsultationPaymentService.getPaymentIdByConsultationId(query.consultationId());
+    public List<Payment> handle(GetAllPaymentsByConsultationIdQuery query) {
+        var consultation = externalConsultationPaymentService.getConsultationById(query.consultationId());
+        return paymentRepository.findAllByConsultation(consultation.get());
     }
 
     @Override

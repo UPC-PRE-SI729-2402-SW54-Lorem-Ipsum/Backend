@@ -30,4 +30,8 @@ public class ExternalLegalCaseConsultationService {
     public Optional<LegalCase> getLegalCaseByConsultationId(Long consultationId){
         return legalCaseContextFacade.getLegalCaseByConsultationId(consultationId);
     }
+
+    public void deleteLegalCaseById(Long legalCaseId) {
+        legalCaseContextFacade.deleteLegalCase(legalCaseId);
+    }
 }

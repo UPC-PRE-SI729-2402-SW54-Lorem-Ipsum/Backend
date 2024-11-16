@@ -3,6 +3,7 @@ package com.loremipsum.lawconnectplatform.communication.application.internal.com
 import com.loremipsum.lawconnectplatform.communication.application.internal.outboundServices.ExternalConsultationCommunicationService;
 import com.loremipsum.lawconnectplatform.communication.domain.model.aggregates.ChatRoom;
 import com.loremipsum.lawconnectplatform.communication.domain.model.commands.CreateChatRoomCommand;
+import com.loremipsum.lawconnectplatform.communication.domain.model.commands.DeleteChatRoomCommand;
 import com.loremipsum.lawconnectplatform.communication.domain.services.ChatRoomCommandService;
 import com.loremipsum.lawconnectplatform.communication.infrastructure.persistence.jpa.repositories.ChatRoomRepository;
 import org.springframework.stereotype.Service;
@@ -34,5 +35,17 @@ public class ChatRoomCommandServiceImpl implements ChatRoomCommandService {
         chatRoomRepository.save(chatRoom);
 
         return Optional.of(chatRoom);
+    }
+
+    @Override
+    public void handle(DeleteChatRoomCommand command) {
+        var consultation = externalConsultationCommunicationService.getConsultationById(command.chatRoomId());
+        var chatRoom = chatRoomRepository.findByConsultation(consultation.get());
+
+        if (chatRoom.isEmpty()) {
+            throw new IllegalArgumentException("Chat room not found");
+        }
+
+        chatRoomRepository.delete(chatRoom.get());
     }
 }

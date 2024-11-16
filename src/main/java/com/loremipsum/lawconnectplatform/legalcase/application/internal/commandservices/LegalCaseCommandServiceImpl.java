@@ -4,6 +4,7 @@ import com.loremipsum.lawconnectplatform.legalcase.application.internal.outbound
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.aggregates.LegalCase;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.commands.CloseLegalCaseCommand;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.commands.CreateLegalCaseCommand;
+import com.loremipsum.lawconnectplatform.legalcase.domain.model.commands.DeleteLegalCaseCommand;
 import com.loremipsum.lawconnectplatform.legalcase.domain.services.LegalCaseCommandService;
 import com.loremipsum.lawconnectplatform.legalcase.infrastructure.persistence.jpa.repositories.LegalCaseRepository;
 import org.springframework.stereotype.Service;
@@ -38,4 +39,13 @@ public class LegalCaseCommandServiceImpl implements LegalCaseCommandService {
             legalCase.ifPresent(LegalCase::close);
             legalCaseRepository.save(legalCase.get());
     }
+
+    @Override
+    public void handle(DeleteLegalCaseCommand command) {
+        var consultation = externalConsultationLegalCaseService.getConsultationById(command.legalCaseId());
+        var legalCase = legalCaseRepository.findByConsultation(consultation.get());
+        legalCase.ifPresent(legalCaseRepository::delete);
+    }
+
+
 }

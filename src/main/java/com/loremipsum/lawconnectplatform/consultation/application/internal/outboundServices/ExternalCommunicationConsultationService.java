@@ -19,4 +19,12 @@ public class ExternalCommunicationConsultationService {
                 consultationId
             );
     }
+
+    public void deleteChatRoom(
+            Long consultationId
+    ){
+        communicationContextFacade.deleteChatRoom(
+                consultationId
+            );
+    }
 }

@@ -17,6 +17,6 @@ public class PaymentCompletedEventHandler {
     @EventListener(PaymentCompletedEvent.class)
     public void onPaymentCompleted(PaymentCompletedEvent event) {
         var consultationId = externalConsultationPaymentService.getConsultationByPaymentId(event.getPaymentId());
-        externalConsultationPaymentService.changeConsultationStatus(consultationId.get().getPaymentId());
+        externalConsultationPaymentService.changeConsultationStatus(consultationId.get().getId());
     }
 }

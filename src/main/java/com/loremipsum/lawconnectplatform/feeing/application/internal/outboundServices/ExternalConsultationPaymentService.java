@@ -24,7 +24,7 @@ public class ExternalConsultationPaymentService {
         return consultationContextFacade.getConsultationByPaymentId(paymentId);
     }
 
-    public Optional<Long> getPaymentIdByConsultationId(Long consultationId) {
-        return consultationContextFacade.getPaymentIdByConsultationId(consultationId);
+    public Optional<Consultation> getConsultationById(Long consultationId) {
+        return consultationContextFacade.getConsultationById(consultationId);
     }
 }

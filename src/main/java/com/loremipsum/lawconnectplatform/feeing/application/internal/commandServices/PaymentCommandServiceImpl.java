@@ -29,8 +29,9 @@ public class PaymentCommandServiceImpl implements PaymentCommandService {
 
     @Override
     public Optional<Payment> handle(CreatePaymentCommand command) {
-
-        var payment = new Payment(command);
+        var consultation = externalConsultationPaymentService.getConsultationById(command.consultationId());
+        var payment = new Payment(command, consultation.get());
+        System.out.println("Payment created");
         paymentRepository.save(payment);
         return Optional.of(payment);
     }
@@ -42,9 +43,7 @@ public class PaymentCommandServiceImpl implements PaymentCommandService {
             return Optional.empty();
         }
 
-        var paymentId = externalConsultationPaymentService.getPaymentIdByConsultationId(command.consultationId());
-
-        var payment = paymentRepository.findById(paymentId.get());
+        var payment = paymentRepository.findById(command.paymentId());
         if (payment.isEmpty()){
             return Optional.empty();
         }

@@ -34,9 +34,6 @@ public class AppointmentCommandServiceImpl implements AppointmentCommandService 
         if (consultation.isEmpty()) {
             throw new IllegalArgumentException("Consultation not found");
         }
-
-        var payment = externalPaymentCommunicationService.getPaymentById(consultation.get().getPaymentId());
-
         var appointment = new Appointment(command, consultation.get());
 
         appointmentRepository.save(appointment);
@@ -46,7 +43,7 @@ public class AppointmentCommandServiceImpl implements AppointmentCommandService 
         externalFollowUpCommunicationService.createNotification(
                 "Appointment created",
                 message,
-                payment.get().getClientId(),
+                consultation.get().getClientId(),
                 consultation.get().getId()
         );
 

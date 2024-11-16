@@ -18,7 +18,7 @@ public class LegalCase extends AuditableAbstractAggregateRoot<LegalCase> {
     private String title;
 
     @Column(nullable = false)
-    @Size(max = 120)
+    @Size(max = 500)
     private String description;
 
     @Column(nullable = false)

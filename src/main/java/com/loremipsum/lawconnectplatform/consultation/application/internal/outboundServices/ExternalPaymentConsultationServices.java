@@ -16,8 +16,8 @@ public class ExternalPaymentConsultationServices {
         this.paymentContextFacade = paymentContextFacade;
     }
 
-    public Optional<Payment> createPayment(Long clientId, Double amount, Integer status) {
-        return paymentContextFacade.createPayment(clientId, amount, status);
+    public Optional<Payment> createPayment(Long consultationId, Long clientId, Double amount, Integer status) {
+        return paymentContextFacade.createPayment(consultationId, clientId, amount, status);
     }
 
     public Optional<Payment> getPaymentById(Long paymentId) {

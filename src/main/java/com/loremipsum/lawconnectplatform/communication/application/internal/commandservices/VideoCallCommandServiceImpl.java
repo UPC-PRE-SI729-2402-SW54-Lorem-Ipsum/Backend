@@ -35,7 +35,6 @@ public class VideoCallCommandServiceImpl implements VideoCallCommandService {
             throw new IllegalArgumentException("Consultation not found");
         }
 
-        var payment = externalPaymentCommunicationService.getPaymentById(consultation.get().getPaymentId());
 
         var VideoCall = new VideoCall(command, consultation.get());
 
@@ -44,7 +43,7 @@ public class VideoCallCommandServiceImpl implements VideoCallCommandService {
         externalFollowUpCommunicationService.createNotification(
                 "Video Call created",
                 command.description(),
-                payment.get().getClientId(),
+                consultation.get().getClientId(),
                 consultation.get().getId()
         );
 

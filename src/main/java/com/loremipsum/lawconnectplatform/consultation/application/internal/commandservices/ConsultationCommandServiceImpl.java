@@ -37,11 +37,7 @@ public class ConsultationCommandServiceImpl implements ConsultationCommandServic
     @Override
     public Long handle(CreateConsultationCommand command) {
 
-        var lawyer = externalProfileConsultationService.getLawyerById(command.lawyerId());
-
-        var payment = externalPaymentConsultationServices.createPayment(command.clientId(), lawyer.get().getPrices(), command.Currency());
-
-        var consultation = new Consultation(command, payment.get());
+        var consultation = new Consultation(command);
 
         try {
             consultationRepository.save(consultation);
@@ -75,14 +71,12 @@ public class ConsultationCommandServiceImpl implements ConsultationCommandServic
             throw new IllegalArgumentException("Consultation does not exist");
         }
         try {
-            var payment = externalPaymentConsultationServices.getPaymentById(consultation.get().getPaymentId());
             externalFollowUpConsultationService.createNotification(
                     "Pago Aceptado",
                     "Ahora la consulta se encuentra pagada",
-                    payment.get().getClientId(),
+                    consultation.get().getClientId(),
                     command.id()
             );
-            consultation.get().changeStatus();
         } catch (Exception e) {
             throw new IllegalArgumentException("Error while changing consultation status: " + e.getMessage());
         }
@@ -95,11 +89,10 @@ public class ConsultationCommandServiceImpl implements ConsultationCommandServic
             throw new IllegalArgumentException("Consultation does not exist");
         }
         try {
-            var payment = externalPaymentConsultationServices.getPaymentById(consultation.get().getPaymentId());
             externalFollowUpConsultationService.createNotification(
                     "Consulta Aceptada",
                     "La consulta ha sido aceptada",
-                    payment.get().getClientId(),
+                    consultation.get().getClientId(),
                     command.consultationId()
             );
             consultation.get().setApplicationAccepted();
@@ -115,21 +108,39 @@ public class ConsultationCommandServiceImpl implements ConsultationCommandServic
             throw new IllegalArgumentException("Consultation does not exist");
         }
         try {
-            var payment = externalPaymentConsultationServices.getPaymentById(consultation.get().getPaymentId());
             externalFollowUpConsultationService.createNotification(
                     "Consulta Rechazada",
                     "La consulta ha sido rechazada",
-                    payment.get().getClientId(),
+                    consultation.get().getClientId(),
                     command.consultationId()
             );
             consultation.get().setApplicationDenied();
 
             externalCommunicationConsultationService.deleteChatRoom(consultation.get().getId());
             externalLegalCaseConsultationService.deleteLegalCaseById(consultation.get().getId());
-            externalPaymentConsultationServices.deletePayment(consultation.get().getPaymentId());
             consultationRepository.deleteById(consultation.get().getId());
         } catch (Exception e) {
             throw new IllegalArgumentException("Error while rejecting consultation: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void handle(CreatePaymentByConsultationIdCommand command) {
+        var consultation = consultationRepository.findById(command.consultationId());
+        if (consultation.isEmpty()) {
+            throw new IllegalArgumentException("Consultation does not exist");
+        }
+        try {
+            var payment = externalPaymentConsultationServices.createPayment(
+                    consultation.get().getId(),
+                    consultation.get().getClientId(),
+                    command.amount(),
+                    command.currency()
+            );
+            System.out.println("Payment created");
+            consultation.get().addPayment(payment.get());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error while creating payment: " + e.getMessage());
         }
     }
 }

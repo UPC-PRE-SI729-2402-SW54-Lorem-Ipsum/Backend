@@ -2,14 +2,15 @@ package com.loremipsum.lawconnectplatform.consultation.interfaces.acl;
 
 import com.loremipsum.lawconnectplatform.consultation.domain.model.aggregates.Consultation;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.ChangeConsultationStatusCommand;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.CreateConsultationCommand;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetConsultationByIdQuery;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetConsultationByPaymentIdQuery;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetPaymentIdByConsultationIdQuery;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetAllPaymentsByConsultationIdQuery;
 import com.loremipsum.lawconnectplatform.consultation.domain.services.ConsultationCommandService;
 import com.loremipsum.lawconnectplatform.consultation.domain.services.ConsultationQueryService;
+import com.loremipsum.lawconnectplatform.feeing.domain.model.aggregates.Payment;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,7 +35,7 @@ public class ConsultationContextFacade {
         return consultationQueryService.handle(new GetConsultationByPaymentIdQuery(paymentId));
     }
 
-    public Optional<Long> getPaymentIdByConsultationId(Long consultationId){
-        return consultationQueryService.handle(new GetPaymentIdByConsultationIdQuery(consultationId));
+    public Optional<List<Payment>> getAllPaymentsByConsultationId(Long consultationId){
+        return consultationQueryService.handle(new GetAllPaymentsByConsultationIdQuery(consultationId));
     }
 }

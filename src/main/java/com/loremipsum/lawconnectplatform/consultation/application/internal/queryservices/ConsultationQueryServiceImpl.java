@@ -3,9 +3,9 @@ package com.loremipsum.lawconnectplatform.consultation.application.internal.quer
 import com.loremipsum.lawconnectplatform.consultation.application.internal.outboundServices.ExternalPaymentConsultationServices;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.aggregates.Consultation;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.*;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.PaymentC;
 import com.loremipsum.lawconnectplatform.consultation.domain.services.ConsultationQueryService;
 import com.loremipsum.lawconnectplatform.consultation.infrastructure.persistence.jpa.repositories.ConsultationRepository;
+import com.loremipsum.lawconnectplatform.feeing.domain.model.aggregates.Payment;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,30 +29,31 @@ public class ConsultationQueryServiceImpl implements ConsultationQueryService {
 
     @Override
     public Optional<Consultation> handle(GetConsultationByLawyerIdAndPaymentIdQuery query) {
-        var paymentId = externalPaymentConsultationServices.getPaymentById(query.paymentId());
-        return consultationRepository.findByPaymentAndLawyerId(paymentId.get(), query.lawyerId());
+        var payment = externalPaymentConsultationServices.getPaymentById(query.paymentId());
+        return payment.flatMap(value -> consultationRepository.findByPayments(List.of(value))
+                .filter(consultation -> {
+                    consultation.getLawyerId();
+                    return false;
+                }));
     }
 
     @Override
     public Optional<Consultation> handle(GetConsultationByPaymentIdQuery query) {
-        var paymentId = externalPaymentConsultationServices.getPaymentById(query.paymentId());
-        return consultationRepository.findByPayment(paymentId.get());
+        var payment = externalPaymentConsultationServices.getPaymentById(query.paymentId());
+        if (payment.isPresent()) {
+            return consultationRepository.findByPayments(List.of(payment.get()));
+        }
+        return Optional.empty();
     }
 
     @Override
-    public Optional<Long> handle(GetPaymentIdByConsultationIdQuery query) {
-        var paymentId = consultationRepository.findById(query.consultationId()).get().getPaymentId().longValue();
-        return Optional.of(paymentId);
+    public Optional<List<Payment>> handle(GetAllPaymentsByConsultationIdQuery query) {
+        var consultation = consultationRepository.findById(query.consultationId());
+        return consultation.map(Consultation::getPayments);
     }
 
     @Override
     public List<Consultation> handle(GetAllConsultationsByLawyerIdQuery query) {
         return consultationRepository.findAllByLawyerId(query.lawyerId());
-    }
-
-    @Override
-    public List<Consultation> handle(GetAllConsultationsByPaymentIdQuery query) {
-        var paymentId = externalPaymentConsultationServices.getPaymentById(query.paymentId());
-        return consultationRepository.findAllByPayment(paymentId.get());
     }
 }

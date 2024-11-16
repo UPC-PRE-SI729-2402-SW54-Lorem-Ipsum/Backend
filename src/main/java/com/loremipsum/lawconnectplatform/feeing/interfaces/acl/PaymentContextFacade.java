@@ -24,11 +24,12 @@ public class PaymentContextFacade {
     }
 
     public Optional<Payment> createPayment(
+            Long consultationId,
             Long clientId,
             Double amount,
             Integer currency
     ){
-        return paymentCommandService.handle(new CreatePaymentCommand(clientId,amount,currency));
+        return paymentCommandService.handle(new CreatePaymentCommand(consultationId, clientId,amount,currency));
     }
 
     public Optional<Payment> getPaymentById(Long paymentId){

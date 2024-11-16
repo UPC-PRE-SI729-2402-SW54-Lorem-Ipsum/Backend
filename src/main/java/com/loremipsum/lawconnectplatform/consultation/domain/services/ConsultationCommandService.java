@@ -8,4 +8,5 @@ public interface ConsultationCommandService {
     void handle(ChangeConsultationStatusCommand command);
     void handle(ApproveConsultationCommand command);
     void handle(RejectConsultationCommand command);
+    void handle(CreatePaymentByConsultationIdCommand command);
 }

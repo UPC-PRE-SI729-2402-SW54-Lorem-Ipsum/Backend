@@ -2,16 +2,17 @@ package com.loremipsum.lawconnectplatform.consultation.interfaces.rest;
 
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.DeleteConsultationCommand;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetAllConsultationsByLawyerIdQuery;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetAllConsultationsByPaymentIdQuery;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetAllPaymentsByConsultationIdQuery;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetConsultationByIdQuery;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.LawyerC;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.PaymentC;
 import com.loremipsum.lawconnectplatform.consultation.domain.services.ConsultationCommandService;
 import com.loremipsum.lawconnectplatform.consultation.domain.services.ConsultationQueryService;
+import com.loremipsum.lawconnectplatform.consultation.interfaces.rest.resources.AddPaymentResource;
 import com.loremipsum.lawconnectplatform.consultation.interfaces.rest.resources.ConsultationResource;
 import com.loremipsum.lawconnectplatform.consultation.interfaces.rest.resources.CreateConsultationResource;
 import com.loremipsum.lawconnectplatform.consultation.interfaces.rest.transform.ConsultationResourceFromEntityAssembler;
 import com.loremipsum.lawconnectplatform.consultation.interfaces.rest.transform.CreateConsultationCommandFromResourceAssembler;
+import com.loremipsum.lawconnectplatform.consultation.interfaces.rest.transform.CreatePaymentCommandFromResourceAssembler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -68,18 +69,17 @@ public class ConsultationController {
         return ResponseEntity.ok(consultationResources);
     }
 
-    @GetMapping("/paymentId/{paymentId}")
-    public ResponseEntity<List<ConsultationResource>> getAllConsultationsByPaymentId(@PathVariable Long paymentId){
-        var getAllConsultationsByPaymentIdQuery = new GetAllConsultationsByPaymentIdQuery(paymentId);
-        var consultations = consultationQueryService.handle(getAllConsultationsByPaymentIdQuery);
-        var consultationResources = consultations.stream().map(ConsultationResourceFromEntityAssembler::toResourceFromEntity).toList();
-        return ResponseEntity.ok(consultationResources);
-    }
-
     @DeleteMapping("/{consultationId}")
     public ResponseEntity<?> deleteConsultation(@PathVariable Long consultationId){
         var deleteConsultationCommand = new DeleteConsultationCommand(consultationId);
         consultationCommandService.handle(deleteConsultationCommand);
         return ResponseEntity.ok("Consultation deleted successfully");
+    }
+
+    @PostMapping("/payments")
+    public ResponseEntity<?> addPaymentToConsultation(@RequestBody AddPaymentResource resource){
+        var createPaymentCommand = CreatePaymentCommandFromResourceAssembler.toCommandFromResource(resource);
+        consultationCommandService.handle(createPaymentCommand);
+        return ResponseEntity.ok("Payment added successfully");
     }
 }

@@ -44,7 +44,7 @@ public class DocumentsCommandServiceImpl implements DocumentsCommandService {
                         "\n added to legal case " + document.getDescription() +
                         "\n ype: " + document.getType() +
                         "\n Status: " + document.getStatus(),
-                        consultation.get().getPayment().getClientId(),
+                        consultation.get().getClientId(),
                         consultation.get().getId()
         );
 
@@ -71,7 +71,7 @@ public class DocumentsCommandServiceImpl implements DocumentsCommandService {
                 "Document status changed",
                 "Document " + document.get().getTitle() +
                         "\n status changed to " + document.get().getStatus(),
-                        consultation.get().getPayment().getClientId(),
+                        consultation.get().getClientId(),
                         consultation.get().getId()
         );
 

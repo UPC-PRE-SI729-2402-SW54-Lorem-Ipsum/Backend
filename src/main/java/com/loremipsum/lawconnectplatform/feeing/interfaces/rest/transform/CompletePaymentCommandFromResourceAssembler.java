@@ -6,7 +6,7 @@ import com.loremipsum.lawconnectplatform.feeing.interfaces.rest.resources.Comple
 import java.time.LocalDate;
 
 public class CompletePaymentCommandFromResourceAssembler {
-    public static CompletePaymentCommand toCommandFromResource(CompletePaymentResource resource, Long consultationId){
+    public static CompletePaymentCommand toCommandFromResource(CompletePaymentResource resource, Long paymentId){
 
         String[] dateParts = resource.expirationDate().split("-");
         int year = Integer.parseInt(dateParts[0]);
@@ -19,7 +19,7 @@ public class CompletePaymentCommandFromResourceAssembler {
         System.out.println(expirationDateYYYYMM);
 
         return new CompletePaymentCommand(
-                consultationId,
+                paymentId,
                 resource.cardNumber(),
                 expirationDateYYYYMM,
                 resource.cvv()

@@ -4,6 +4,7 @@ import com.loremipsum.lawconnectplatform.profiles.domain.model.commands.Incremen
 import com.loremipsum.lawconnectplatform.profiles.domain.model.commands.IncrementPaidServicesCommand;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.queries.GetAllClientsQuery;
 import com.loremipsum.lawconnectplatform.profiles.domain.model.queries.GetClientByIdQuery;
+import com.loremipsum.lawconnectplatform.profiles.domain.model.queries.GetClientIdByEmailQuery;
 import com.loremipsum.lawconnectplatform.profiles.domain.services.ClientCommandService;
 import com.loremipsum.lawconnectplatform.profiles.domain.services.ClientQueryService;
 import com.loremipsum.lawconnectplatform.profiles.interfaces.rest.resources.ClientResource;
@@ -77,5 +78,11 @@ public class ClientController {
         if(client.isEmpty()) return ResponseEntity.notFound().build();
         var clientResource = ClientResourceFromEntityAssembler.ToResourceFromEntity(client.get());
         return ResponseEntity.ok(clientResource);
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<Long> getClientByEmail(@PathVariable String email){
+        var client = clientQueryService.handle(new GetClientIdByEmailQuery(email));
+        return client.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

@@ -9,6 +9,7 @@ import com.loremipsum.lawconnectplatform.profiles.domain.model.valueobjects.Pers
 import com.loremipsum.lawconnectplatform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +28,7 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
     @NotNull
     private String DNI;
 
+    @Size(max = 500)
     @NotNull
     private String image_url;
 

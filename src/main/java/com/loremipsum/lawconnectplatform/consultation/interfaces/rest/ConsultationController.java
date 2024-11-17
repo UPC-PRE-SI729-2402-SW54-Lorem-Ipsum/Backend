@@ -85,13 +85,13 @@ public class ConsultationController {
         return ResponseEntity.ok("Payment added successfully");
     }
 
-    @PatchMapping("/{consultationId}")
+    @PatchMapping("/approve/{consultationId}")
     public ResponseEntity<?> approveConsultation(@PathVariable Long consultationId){
         consultationCommandService.handle(new ApproveConsultationCommand(consultationId));
         return ResponseEntity.ok("Consultation approved successfully");
     }
 
-    @PatchMapping("/{consultationId}")
+    @PatchMapping("/reject/{consultationId}")
     public ResponseEntity<?> declineConsultation(@PathVariable Long consultationId){
         consultationCommandService.handle(new RejectConsultationCommand(consultationId));
         return ResponseEntity.ok("Consultation approved successfully");

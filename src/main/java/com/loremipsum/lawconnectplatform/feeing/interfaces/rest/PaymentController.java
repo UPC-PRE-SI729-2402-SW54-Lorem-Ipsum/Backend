@@ -35,7 +35,7 @@ public class PaymentController {
     }
 
     @Operation(summary = "Complete consultation Payment")
-    @PatchMapping(value = "/project/{paymentId}")
+    @PatchMapping(value = "/consultation/{paymentId}")
     public ResponseEntity<PaymentResource> completePayment(@RequestBody CompletePaymentResource resource, @PathVariable Long paymentId) {
         var command = CompletePaymentCommandFromResourceAssembler.toCommandFromResource(resource, paymentId);
         var payment = paymentCommandService.handle(command);
@@ -47,7 +47,7 @@ public class PaymentController {
     }
 
     @Operation(summary = "Get Payment Id By Consultation Id")
-    @GetMapping(value = "/project/{consultationId}")
+    @GetMapping(value = "/consultation/{consultationId}")
     public ResponseEntity<List<PaymentResource>> getAllPaymentsByConsultationId(@PathVariable Long consultationId) {
         var payment = paymentQueryService.handle(new GetAllPaymentsByConsultationIdQuery(consultationId));
         if (payment.isEmpty()){
@@ -71,7 +71,7 @@ public class PaymentController {
     }
 
     @Operation(summary = "Get Payments By Client Id")
-    @GetMapping(value = "/developer/{clientId}")
+    @GetMapping(value = "/payment/{clientId}")
     public ResponseEntity<List<PaymentResource>> getAllPaymentsByDeveloper(@PathVariable Long clientId) {
         var payments = paymentQueryService.handle(new GetAllPaymentByClientIdQuery(clientId));
         var paymentsResources = payments.stream()

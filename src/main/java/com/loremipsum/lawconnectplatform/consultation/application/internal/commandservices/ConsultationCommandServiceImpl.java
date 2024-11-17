@@ -96,6 +96,7 @@ public class ConsultationCommandServiceImpl implements ConsultationCommandServic
                     command.consultationId()
             );
             consultation.get().setApplicationAccepted();
+            consultationRepository.save(consultation.get());
         } catch (Exception e) {
             throw new IllegalArgumentException("Error while approving consultation: " + e.getMessage());
         }

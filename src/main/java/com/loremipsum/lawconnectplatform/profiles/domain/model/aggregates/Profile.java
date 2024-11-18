@@ -39,6 +39,7 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
 
     @NotNull
     @Column(name = "address", insertable = false, updatable = false)
+    @Size(max = 500)
     private String address;
 
     public Profile(String firstName, String lastName, String email, String phoneNumber, String DNI, String image_url, String address) {

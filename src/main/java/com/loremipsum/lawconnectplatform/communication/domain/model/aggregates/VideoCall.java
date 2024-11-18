@@ -6,6 +6,8 @@ import com.loremipsum.lawconnectplatform.consultation.domain.model.aggregates.Co
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.valueobjects.DocumentsStatus;
 import com.loremipsum.lawconnectplatform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
@@ -16,6 +18,8 @@ public class VideoCall extends AuditableAbstractAggregateRoot<VideoCall> {
     @JoinColumn(name = "consultation", nullable = false)
     private Consultation consultation;
 
+    @NotNull
+    @Size(max = 500)
     private String description;
 
     @Enumerated(EnumType.STRING)

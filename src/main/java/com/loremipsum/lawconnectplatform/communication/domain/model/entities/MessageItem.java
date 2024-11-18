@@ -6,6 +6,7 @@ import com.loremipsum.lawconnectplatform.communication.domain.model.commands.Add
 import com.loremipsum.lawconnectplatform.communication.domain.model.valueobjects.SenderType;
 import com.loremipsum.lawconnectplatform.shared.domain.model.entities.AuditableModel;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,10 +16,12 @@ import lombok.Setter;
 public class MessageItem extends AuditableModel {
 
     @Column(nullable = false)
+    @Size(max = 1000)
     private String content;
 
     private boolean isRead;
 
+    @Enumerated(EnumType.ORDINAL)
     private SenderType senderType;
 
     @ManyToOne

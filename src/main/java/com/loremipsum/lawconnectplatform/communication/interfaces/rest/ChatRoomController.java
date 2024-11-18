@@ -6,6 +6,7 @@ import com.loremipsum.lawconnectplatform.communication.domain.services.ChatRoomC
 import com.loremipsum.lawconnectplatform.communication.domain.services.ChatRoomQueryService;
 import com.loremipsum.lawconnectplatform.communication.interfaces.rest.resources.ChatRoomResource;
 import com.loremipsum.lawconnectplatform.communication.interfaces.rest.transform.ChatRoomResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +26,7 @@ public class ChatRoomController {
         this.chatRoomQueryService = chatRoomQueryService;
     }
 
+    @Operation(summary = "Create Chat Room By Consultation Id")
     @PostMapping("/{consultationId}")
     public ResponseEntity<ChatRoomResource> createChatRoom(@PathVariable Long consultationId) {
         var createChatRoomCommand = new CreateChatRoomCommand(consultationId);
@@ -34,6 +36,7 @@ public class ChatRoomController {
         return new ResponseEntity<>(chatRoomResource, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get Chat Room By Consultation Id")
     @GetMapping("/{consultationId}")
     public ResponseEntity<ChatRoomResource> getChatRoomByConsultationId(@PathVariable Long consultationId) {
         var chatRoom = chatRoomQueryService.handle(new GetChatRoomByConsultationIdQuery(consultationId));

@@ -7,6 +7,7 @@ import com.loremipsum.lawconnectplatform.communication.interfaces.rest.resources
 import com.loremipsum.lawconnectplatform.communication.interfaces.rest.resources.VideoCallResource;
 import com.loremipsum.lawconnectplatform.communication.interfaces.rest.transform.CreateVideoCallCommandFromResourceAssembler;
 import com.loremipsum.lawconnectplatform.communication.interfaces.rest.transform.VideoCallResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +30,7 @@ public class VideoCallController {
         this.videoCallQueryService = videoCallQueryService;
     }
 
+    @Operation(summary = "Create Video Call")
     @PostMapping
     public ResponseEntity<VideoCallResource> createVideoCall(@RequestBody CreateVideoCallResource resource) {
         var createVideoCallCommand = CreateVideoCallCommandFromResourceAssembler.toCommandFromResource(resource);
@@ -38,6 +40,7 @@ public class VideoCallController {
         return new ResponseEntity<>(videoCallResource, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get Video Call By Consultation Id")
     @GetMapping("/{consultationId}")
     public ResponseEntity<List<VideoCallResource>> getVideoCallByConsultationId(@PathVariable Long consultationId) {
         var videoCall = videoCallQueryService.handle(new GetAllVideoCallsByConsultationId(consultationId));

@@ -7,6 +7,7 @@ import com.loremipsum.lawconnectplatform.communication.interfaces.rest.resources
 import com.loremipsum.lawconnectplatform.communication.interfaces.rest.resources.CreateAppointmentResource;
 import com.loremipsum.lawconnectplatform.communication.interfaces.rest.transform.AppointmentResourceFromEntityAssembler;
 import com.loremipsum.lawconnectplatform.communication.interfaces.rest.transform.CreateAppointmentCommandFromResourceAssembler;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +30,7 @@ public class AppointmentController {
         this.appointmentQueryService = appointmentQueryService;
     }
 
+    @Operation(summary = "Create Appointment")
     @PostMapping
     public ResponseEntity<AppointmentResource> createAppointment(@RequestBody CreateAppointmentResource resource) {
         var createAppointmentCommand = CreateAppointmentCommandFromResourceAssembler.toCommandFromResource(resource);
@@ -38,6 +40,7 @@ public class AppointmentController {
         return new ResponseEntity<>(appointmentResource, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get Appointment By Consultation Id")
     @GetMapping("/{consultationId}")
     public ResponseEntity<List<AppointmentResource>> getAppointmentByConsultationId(@PathVariable Long consultationId) {
         var getAppointmentByIdQuery = new GetAllAppointmentsByConsultationIdQuery(consultationId);

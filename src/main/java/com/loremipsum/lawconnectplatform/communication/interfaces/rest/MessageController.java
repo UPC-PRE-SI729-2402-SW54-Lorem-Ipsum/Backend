@@ -7,6 +7,7 @@ import com.loremipsum.lawconnectplatform.communication.interfaces.rest.resources
 import com.loremipsum.lawconnectplatform.communication.interfaces.rest.resources.MessageResource;
 import com.loremipsum.lawconnectplatform.communication.interfaces.rest.transform.AddMessageByChatRoomIdCommandFromResourceAssembler;
 import com.loremipsum.lawconnectplatform.communication.interfaces.rest.transform.MessageResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ public class MessageController {
         this.messageQueryService = messageQueryService;
     }
 
+    @Operation(summary = "Add Message By Chat Room Id")
     @PostMapping
     public ResponseEntity<?> addMessageByChatRoomId(@RequestBody AddMessageByChatRoomIdResource resource) {
         var addMessageByChatRoomIdCommand = AddMessageByChatRoomIdCommandFromResourceAssembler.toCommandFromResource(resource);
@@ -34,6 +36,7 @@ public class MessageController {
         return ResponseEntity.ok("Message added successfully");
     }
 
+    @Operation(summary = "Get All Messages By Chat Room Id")
     @GetMapping("/{chatRoomId}")
     public ResponseEntity<List<MessageResource>> getAllMessageByChatRoomId(@PathVariable Long chatRoomId) {
         var message = messageQueryService.handle(new GetAllMessagesByChatRoomIdQuery(chatRoomId));

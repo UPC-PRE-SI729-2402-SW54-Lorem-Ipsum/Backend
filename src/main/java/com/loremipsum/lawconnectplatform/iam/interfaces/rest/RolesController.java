@@ -1,5 +1,6 @@
 package com.loremipsum.lawconnectplatform.iam.interfaces.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,8 @@ public class RolesController {
      * @return List of role resources
      * @see RoleResource
      */
+
+    @Operation(summary = "Get All Roles")
     @GetMapping
     public ResponseEntity<List<RoleResource>> getAllRoles() {
         var getAllRolesQuery = new GetAllRolesQuery();

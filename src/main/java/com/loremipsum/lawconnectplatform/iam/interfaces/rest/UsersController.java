@@ -1,5 +1,6 @@
 package com.loremipsum.lawconnectplatform.iam.interfaces.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,8 @@ public class UsersController {
      * @return a list of user resources
      * @see UserResource
      */
+
+    @Operation(summary = "Get All Users")
     @GetMapping
     public ResponseEntity<List<UserResource>> getAllUsers() {
         var getAllUsersQuery = new GetAllUsersQuery();
@@ -51,6 +54,8 @@ public class UsersController {
      * @throws RuntimeException if the user is not found
      * @see UserResource
      */
+
+    @Operation(summary = "Get A User By Id")
     @GetMapping(value = "/{userId}")
     public ResponseEntity<UserResource> getUserById(@PathVariable Long userId) {
         var getUserByIdQuery = new GetUserByIdQuery(userId);

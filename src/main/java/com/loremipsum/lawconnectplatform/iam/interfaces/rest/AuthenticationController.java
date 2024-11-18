@@ -1,5 +1,6 @@
 package com.loremipsum.lawconnectplatform.iam.interfaces.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,6 +45,8 @@ public class AuthenticationController {
      * @param signInResource the sign-in request body.
      * @return the authenticated user resource.
      */
+
+    @Operation(summary = "Sign In")
     @PostMapping("/sign-in")
     public ResponseEntity<AuthenticatedUserResource> signIn(@RequestBody SignInResource signInResource) {
         var signInCommand = SignInCommandFromResourceAssembler.toCommandFromResource(signInResource);
@@ -60,6 +63,8 @@ public class AuthenticationController {
      * @param signUpResource the sign-up request body.
      * @return the created user resource.
      */
+
+    @Operation(summary = "Sign Up")
     @PostMapping("/sign-up")
     public ResponseEntity<UserResource> signUp(@RequestBody SignUpResource signUpResource) {
         var signUpCommand = SignUpCommandFromResourceAssembler.toCommandFromResource(signUpResource);

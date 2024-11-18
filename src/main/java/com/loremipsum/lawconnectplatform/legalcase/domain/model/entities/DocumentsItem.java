@@ -16,7 +16,7 @@ import lombok.Setter;
 public class DocumentsItem extends AuditableModel {
 
     @Column(nullable = false)
-    @Size(max = 120)
+    @Size(max = 250)
     private String title;
 
     @Enumerated(EnumType.STRING)

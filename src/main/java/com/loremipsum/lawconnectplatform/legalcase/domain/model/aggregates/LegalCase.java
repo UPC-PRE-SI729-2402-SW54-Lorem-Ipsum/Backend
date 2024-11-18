@@ -14,7 +14,7 @@ import lombok.Getter;
 public class LegalCase extends AuditableAbstractAggregateRoot<LegalCase> {
 
     @Column(nullable = false)
-    @Size(max = 120)
+    @Size(max = 250)
     private String title;
 
     @Column(nullable = false)

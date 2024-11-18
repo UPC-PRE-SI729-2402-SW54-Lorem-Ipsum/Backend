@@ -31,8 +31,10 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
     @Size(max = 500)
     private String description;
 
+    @Enumerated(EnumType.ORDINAL)
     private ConsultationType consultationType;
 
+    @Enumerated(EnumType.STRING)
     private ApplicationStatus applicationStatus;
 
     public Consultation() {

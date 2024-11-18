@@ -1,6 +1,7 @@
 package com.loremipsum.lawconnectplatform.iam.domain.model.aggregates;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class User extends AuditableAbstractAggregateRoot<User> {
     @NotBlank
     @Size(max = 50)
     @Column(unique = true)
+    @Email
     private String username;
 
     @NotBlank

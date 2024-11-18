@@ -22,6 +22,7 @@ public class LegalCase extends AuditableAbstractAggregateRoot<LegalCase> {
     private String description;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private LegalCaseStatus status;
 
     @OneToOne

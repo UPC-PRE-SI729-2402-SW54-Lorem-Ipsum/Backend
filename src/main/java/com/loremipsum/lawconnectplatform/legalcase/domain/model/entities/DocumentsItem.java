@@ -6,6 +6,7 @@ import com.loremipsum.lawconnectplatform.legalcase.domain.model.valueobjects.Doc
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.valueobjects.DocumentsStatus;
 import com.loremipsum.lawconnectplatform.shared.domain.model.entities.AuditableModel;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,7 @@ import lombok.Setter;
 public class DocumentsItem extends AuditableModel {
 
     @Column(nullable = false)
+    @Size(max = 120)
     private String title;
 
     @Enumerated(EnumType.STRING)
@@ -22,6 +24,7 @@ public class DocumentsItem extends AuditableModel {
     private DocumentType type;
 
     @Column(nullable = false)
+    @Size(max = 500)
     private String description;
 
     @ManyToOne

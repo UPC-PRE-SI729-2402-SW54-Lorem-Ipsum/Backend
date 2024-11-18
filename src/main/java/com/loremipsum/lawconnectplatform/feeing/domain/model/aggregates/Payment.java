@@ -7,6 +7,7 @@ import com.loremipsum.lawconnectplatform.feeing.domain.model.events.PaymentCompl
 import com.loremipsum.lawconnectplatform.feeing.domain.model.valueObjects.*;
 import com.loremipsum.lawconnectplatform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class Payment extends AuditableAbstractAggregateRoot<Payment> {
     @JoinColumn(name = "consultation_id")
     private Consultation consultation;
 
+    @NotNull
     private Long clientId;
 
     @Embedded

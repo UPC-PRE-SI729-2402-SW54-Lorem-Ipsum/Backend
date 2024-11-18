@@ -26,7 +26,7 @@ public class ChatRoomController {
         this.chatRoomQueryService = chatRoomQueryService;
     }
 
-    @Operation(summary = "Create Chat Room By Consultation Id")
+    @Operation(summary = "Create A Chat Room By Consultation Id")
     @PostMapping("/{consultationId}")
     public ResponseEntity<ChatRoomResource> createChatRoom(@PathVariable Long consultationId) {
         var createChatRoomCommand = new CreateChatRoomCommand(consultationId);

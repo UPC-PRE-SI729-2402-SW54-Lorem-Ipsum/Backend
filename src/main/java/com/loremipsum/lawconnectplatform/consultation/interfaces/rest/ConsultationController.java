@@ -118,7 +118,7 @@ public class ConsultationController {
         return ResponseEntity.ok("Consultation deleted successfully");
     }
 
-    @Operation(summary = "Add Payment To Consultation")
+    @Operation(summary = "Add A Payment To Consultation")
     @PostMapping("/payments")
     public ResponseEntity<?> addPaymentToConsultation(@RequestBody AddPaymentResource resource){
         var createPaymentCommand = CreatePaymentCommandFromResourceAssembler.toCommandFromResource(resource);
@@ -126,14 +126,14 @@ public class ConsultationController {
         return ResponseEntity.ok("Payment added successfully");
     }
 
-    @Operation(summary = "Approve Consultation")
+    @Operation(summary = "Approve A Consultation")
     @PatchMapping("/approve/{consultationId}")
     public ResponseEntity<?> approveConsultation(@PathVariable Long consultationId){
         consultationCommandService.handle(new ApproveConsultationCommand(consultationId));
         return ResponseEntity.ok("Consultation approved successfully");
     }
 
-    @Operation(summary = "Reject Consultation")
+    @Operation(summary = "Reject A Consultation")
     @PatchMapping("/reject/{consultationId}")
     public ResponseEntity<?> declineConsultation(@PathVariable Long consultationId){
         consultationCommandService.handle(new RejectConsultationCommand(consultationId));

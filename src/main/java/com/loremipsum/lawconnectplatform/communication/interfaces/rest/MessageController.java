@@ -28,7 +28,7 @@ public class MessageController {
         this.messageQueryService = messageQueryService;
     }
 
-    @Operation(summary = "Add Message By Chat Room Id")
+    @Operation(summary = "Add A Message By Chat Room Id")
     @PostMapping
     public ResponseEntity<?> addMessageByChatRoomId(@RequestBody AddMessageByChatRoomIdResource resource) {
         var addMessageByChatRoomIdCommand = AddMessageByChatRoomIdCommandFromResourceAssembler.toCommandFromResource(resource);

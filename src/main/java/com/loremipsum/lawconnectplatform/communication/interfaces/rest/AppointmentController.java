@@ -30,7 +30,7 @@ public class AppointmentController {
         this.appointmentQueryService = appointmentQueryService;
     }
 
-    @Operation(summary = "Create Appointment")
+    @Operation(summary = "Create An Appointment")
     @PostMapping
     public ResponseEntity<AppointmentResource> createAppointment(@RequestBody CreateAppointmentResource resource) {
         var createAppointmentCommand = CreateAppointmentCommandFromResourceAssembler.toCommandFromResource(resource);

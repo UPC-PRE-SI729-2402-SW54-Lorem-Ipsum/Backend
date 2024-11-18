@@ -30,7 +30,7 @@ public class VideoCallController {
         this.videoCallQueryService = videoCallQueryService;
     }
 
-    @Operation(summary = "Create Video Call")
+    @Operation(summary = "Create A Video Call")
     @PostMapping
     public ResponseEntity<VideoCallResource> createVideoCall(@RequestBody CreateVideoCallResource resource) {
         var createVideoCallCommand = CreateVideoCallCommandFromResourceAssembler.toCommandFromResource(resource);

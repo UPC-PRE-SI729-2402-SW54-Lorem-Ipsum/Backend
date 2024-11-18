@@ -61,7 +61,7 @@ public class DocumentsItemController {
         return ResponseEntity.ok(documentItemResources);
     }
 
-    @Operation(summary = "Change Document Status")
+    @Operation(summary = "Change Document's Status")
     @PatchMapping("/status/{documentId}")
     public ResponseEntity<?> changeDocumentStatus(@PathVariable Long documentId, @RequestParam Integer status) {
         documentsCommandService.handle(new ChangeDocumentStatusCommand(documentId, status));

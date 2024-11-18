@@ -11,6 +11,7 @@ import com.loremipsum.lawconnectplatform.profiles.interfaces.rest.resources.Clie
 import com.loremipsum.lawconnectplatform.profiles.interfaces.rest.resources.CreateClientResource;
 import com.loremipsum.lawconnectplatform.profiles.interfaces.rest.transform.ClientResourceFromEntityAssembler;
 import com.loremipsum.lawconnectplatform.profiles.interfaces.rest.transform.CreateClientCommandFromResourceAssembler;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ public class ClientController {
         this.clientQueryService = clientQueryService;
     }
 
+    @Operation(summary = "Create A New Client")
     @PostMapping
     public ResponseEntity<ClientResource> createClient(@RequestBody CreateClientResource resource){
         var createClientCommand = CreateClientCommandFromResourceAssembler.ToCommandFromResource(resource);
@@ -41,6 +43,7 @@ public class ClientController {
         return ResponseEntity.ok(clientResource);
     }
 
+    @Operation(summary = "Get Client By Id")
     @GetMapping("/Id/{clientId}")
     public ResponseEntity<ClientResource> getClientById(@PathVariable Long clientId){
         var getClientByIdQuery = new GetClientByIdQuery(clientId);
@@ -50,6 +53,7 @@ public class ClientController {
         return ResponseEntity.ok(clientResource);
     }
 
+    @Operation(summary = "Get All Clients")
     @GetMapping
     public ResponseEntity<List<ClientResource>> getAllClients(){
         var getAllClientsQuery = new GetAllClientsQuery();
@@ -60,6 +64,7 @@ public class ClientController {
         return ResponseEntity.ok(clientResources);
     }
 
+    @Operation(summary = "Increment Consultation Made")
     @PatchMapping("/IncrementConsultation")
     public ResponseEntity<ClientResource> incrementConsultation(@RequestParam Long clientId){
         clientCommandService.handle(new IncrementConsultationsMadeCommand(clientId));
@@ -70,6 +75,7 @@ public class ClientController {
         return ResponseEntity.ok(clientResource);
     }
 
+    @Operation(summary = "Increment Paid Services Made")
     @PatchMapping("/IncrementPaid")
     public ResponseEntity<ClientResource> incrementPaid(@RequestParam Long clientId){
         clientCommandService.handle(new IncrementPaidServicesCommand(clientId));
@@ -80,6 +86,7 @@ public class ClientController {
         return ResponseEntity.ok(clientResource);
     }
 
+    @Operation(summary = "Get Client By Email")
     @GetMapping("/email/{email}")
     public ResponseEntity<Long> getClientByEmail(@PathVariable String email){
         var client = clientQueryService.handle(new GetClientIdByEmailQuery(email));

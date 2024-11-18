@@ -8,6 +8,7 @@ import com.loremipsum.lawconnectplatform.profiles.interfaces.rest.resources.Crea
 import com.loremipsum.lawconnectplatform.profiles.interfaces.rest.resources.ProfileResource;
 import com.loremipsum.lawconnectplatform.profiles.interfaces.rest.transform.CreateProfileCommandFromResourceAssembler;
 import com.loremipsum.lawconnectplatform.profiles.interfaces.rest.transform.ProfileResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,6 +31,7 @@ public class ProfileController {
         this.profileQueryService = profileQueryService;
     }
 
+    @Operation(summary = "Create A New Profile")
     @PostMapping
     public ResponseEntity<ProfileResource> createProfile(@RequestBody CreateProfileResource resource) {
         var createProfileCommand = CreateProfileCommandFromResourceAssembler.ToCommandFromResource(resource);
@@ -39,6 +41,7 @@ public class ProfileController {
         return new ResponseEntity<>(profileResource, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get Profile By Id")
     @GetMapping("/{profileId}")
     public ResponseEntity<ProfileResource> getProfileById(@PathVariable Long profileId) {
         var getProfileByIdQuery = new GetProfileByIdQuery(profileId);
@@ -48,6 +51,7 @@ public class ProfileController {
         return ResponseEntity.ok(profileResource);
     }
 
+    @Operation(summary = "Get All Profiles")
     @GetMapping
     public ResponseEntity<List<ProfileResource>> getAllProfiles() {
         var getAllProfilesQuery = new GetAllProfilesQuery();

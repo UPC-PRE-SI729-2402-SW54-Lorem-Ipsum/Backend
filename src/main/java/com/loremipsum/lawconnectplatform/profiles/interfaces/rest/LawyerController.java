@@ -15,6 +15,7 @@ import com.loremipsum.lawconnectplatform.profiles.interfaces.rest.transform.AddL
 import com.loremipsum.lawconnectplatform.profiles.interfaces.rest.transform.AddLawyerTypeCommandFromResourceAssembler;
 import com.loremipsum.lawconnectplatform.profiles.interfaces.rest.transform.CreateLawyerCommandFromResourceAssembler;
 import com.loremipsum.lawconnectplatform.profiles.interfaces.rest.transform.LawyerResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,6 +37,7 @@ public class LawyerController {
         this.lawyerQueryService = lawyerQueryService;
     }
 
+    @Operation(summary = "Create A Lawyer")
     @PostMapping
     public ResponseEntity<LawyerResource> createLawyer(@RequestBody CreateLawyerResource resource){
         var createLawyerCommand = CreateLawyerCommandFromResourceAssembler.ToCommandFromResource(resource);
@@ -47,6 +49,7 @@ public class LawyerController {
         return new ResponseEntity<>(lawyerResource, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get Lawyer By Id")
     @GetMapping("/Id/{lawyerId}")
     public ResponseEntity<LawyerResource> getLawyerById(@PathVariable Long lawyerId){
         var getLawyerByIdQuery = new GetLawyerByIdQuery(lawyerId);
@@ -58,6 +61,7 @@ public class LawyerController {
         return ResponseEntity.ok(lawyerResource);
     }
 
+    @Operation(summary = "Get All Lawyers")
     @GetMapping
     public ResponseEntity<List<LawyerResource>> getAllLawyers(){
         var GetAllLawyersQuery = new GetAllLawyersQuery();
@@ -68,6 +72,7 @@ public class LawyerController {
         return ResponseEntity.ok(lawyersResource);
     }
 
+    @Operation(summary = "Add Lawyer's Price")
     @PatchMapping("/prices")
     public ResponseEntity<LawyerResource> addLawyerPrice(@RequestBody AddLawyerPricesResource resource){
         var addLawyerPriceCommand = AddLawyerPricesCommandFromResourceAssembler.ToCommandFromResource(resource);
@@ -77,6 +82,7 @@ public class LawyerController {
         return ResponseEntity.ok(lawyerResource);
     }
 
+    @Operation(summary = "Get Lawyer Type By Id")
     @PatchMapping("/type")
     public ResponseEntity<LawyerResource> addLawyerType(@RequestBody AddLawyerTypeResource resource){
         var addLawyerTypeCommand = AddLawyerTypeCommandFromResourceAssembler.ToCommandFromResource(resource);
@@ -86,6 +92,7 @@ public class LawyerController {
         return ResponseEntity.ok(lawyerResource);
     }
 
+    @Operation(summary = "Get Lawyer Email By Id")
     @GetMapping("/email/{email}")
     public ResponseEntity<Long> getLawyerByEmail(@PathVariable String email){
         var lawyer = lawyerQueryService.handle(new GetLawyerIdByEmailQuery(email));

@@ -26,6 +26,7 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
     private EmailAddress email;
 
     @NotNull
+    @Size(min= 8, max = 8)
     private String DNI;
 
     @Size(max = 500)
@@ -33,6 +34,7 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
     private String image_url;
 
     @NotNull
+    @Size(min = 9, max = 9)
     private String phoneNumber;
 
     @NotNull

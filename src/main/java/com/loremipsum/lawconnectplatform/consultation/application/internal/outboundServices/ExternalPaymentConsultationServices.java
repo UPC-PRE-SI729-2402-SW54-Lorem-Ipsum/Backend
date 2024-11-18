@@ -2,9 +2,11 @@ package com.loremipsum.lawconnectplatform.consultation.application.internal.outb
 
 import com.loremipsum.lawconnectplatform.feeing.domain.model.aggregates.Payment;
 import com.loremipsum.lawconnectplatform.feeing.interfaces.acl.PaymentContextFacade;
+import com.loremipsum.lawconnectplatform.feeing.interfaces.rest.resources.PaymentResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,5 +28,11 @@ public class ExternalPaymentConsultationServices {
 
     public void deletePayment(Long paymentId) {
         paymentContextFacade.deletePaymentById(paymentId);
+    }
+
+    public List<PaymentResource> createPaymentListResource(
+            List<Payment> payment
+    ) {
+        return paymentContextFacade.createPaymentListResource(payment);
     }
 }

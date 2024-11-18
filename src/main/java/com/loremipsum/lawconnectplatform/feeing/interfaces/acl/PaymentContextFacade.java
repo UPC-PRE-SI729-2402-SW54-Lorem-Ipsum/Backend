@@ -6,10 +6,14 @@ import com.loremipsum.lawconnectplatform.feeing.domain.model.commands.DeletePaym
 import com.loremipsum.lawconnectplatform.feeing.domain.model.queries.GetPaymentByIdQuery;
 import com.loremipsum.lawconnectplatform.feeing.domain.services.PaymentCommandService;
 import com.loremipsum.lawconnectplatform.feeing.domain.services.PaymentQueryService;
+import com.loremipsum.lawconnectplatform.feeing.interfaces.rest.resources.PaymentResource;
+import com.loremipsum.lawconnectplatform.feeing.interfaces.rest.transform.PaymentResourceFromEntityAssembler;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PaymentContextFacade {
@@ -39,4 +43,14 @@ public class PaymentContextFacade {
     public void deletePaymentById(Long paymentId){
         paymentCommandService.handle(new DeletePaymentCommand(paymentId));
     }
+
+    public List<PaymentResource> createPaymentListResource(
+            List<Payment> payment
+    ){
+        var paymentsResources = payment.stream()
+                .map(PaymentResourceFromEntityAssembler::toResourceFromEntity)
+                .collect(Collectors.toList());
+        return Optional.of(paymentsResources).orElseThrow();
+    }
+
 }

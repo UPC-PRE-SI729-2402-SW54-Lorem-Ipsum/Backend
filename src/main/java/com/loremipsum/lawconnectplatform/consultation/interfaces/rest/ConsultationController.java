@@ -1,5 +1,6 @@
 package com.loremipsum.lawconnectplatform.consultation.interfaces.rest;
 
+import com.loremipsum.lawconnectplatform.consultation.application.internal.outboundServices.ExternalPaymentConsultationServices;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.ApproveConsultationCommand;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.DeleteConsultationCommand;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.RejectConsultationCommand;
@@ -30,10 +31,12 @@ public class ConsultationController {
 
     private final ConsultationCommandService consultationCommandService;
     private final ConsultationQueryService consultationQueryService;
+    private final ExternalPaymentConsultationServices externalPaymentConsultationServices;
 
-    public ConsultationController(ConsultationCommandService consultationCommandService, ConsultationQueryService consultationQueryService) {
+    public ConsultationController(ConsultationCommandService consultationCommandService, ConsultationQueryService consultationQueryService, ExternalPaymentConsultationServices externalPaymentConsultationServices) {
         this.consultationCommandService = consultationCommandService;
         this.consultationQueryService = consultationQueryService;
+        this.externalPaymentConsultationServices = externalPaymentConsultationServices;
     }
 
     @PostMapping
@@ -47,7 +50,9 @@ public class ConsultationController {
 
         if (consultation.isEmpty()) return ResponseEntity.badRequest().build();
 
-        var consultationResource = ConsultationResourceFromEntityAssembler.toResourceFromEntity(consultation.get());
+        var paymentsResource = externalPaymentConsultationServices.createPaymentListResource(consultation.get().getPayments());
+
+        var consultationResource = ConsultationResourceFromEntityAssembler.toResourceFromEntity(consultation.get(), paymentsResource);
         return new ResponseEntity<>(consultationResource, HttpStatus.CREATED);
     }
 
@@ -58,7 +63,9 @@ public class ConsultationController {
 
         if (consultation.isEmpty()) return ResponseEntity.notFound().build();
 
-        var consultationResource = ConsultationResourceFromEntityAssembler.toResourceFromEntity(consultation.get());
+        var paymentsResource = externalPaymentConsultationServices.createPaymentListResource(consultation.get().getPayments());
+
+        var consultationResource = ConsultationResourceFromEntityAssembler.toResourceFromEntity(consultation.get(), paymentsResource);
         return ResponseEntity.ok(consultationResource);
     }
 
@@ -66,7 +73,12 @@ public class ConsultationController {
     public ResponseEntity<List<ConsultationResource>> getAllConsultationsByLawyerId(@PathVariable Long lawyerId){
         var getAllConsultationsByLawyerIdQuery = new GetAllConsultationsByLawyerIdQuery(lawyerId);
         var consultations = consultationQueryService.handle(getAllConsultationsByLawyerIdQuery);
-        var consultationResources = consultations.stream().map(ConsultationResourceFromEntityAssembler::toResourceFromEntity).toList();
+
+        var consultationResources = consultations.stream().map( consultation ->{
+                    var paymentsResource = externalPaymentConsultationServices.createPaymentListResource(consultation.getPayments());
+                    return ConsultationResourceFromEntityAssembler.toResourceFromEntity(consultation, paymentsResource);
+                }
+        ).toList();
         return ResponseEntity.ok(consultationResources);
     }
 
@@ -74,7 +86,10 @@ public class ConsultationController {
     public ResponseEntity<List<ConsultationResource>> getAllConsultationsByClientId(@PathVariable Long clientId){
         var getAllConsultationsByClientIdQuery = new GetAllConsultationsByClientIdQuery(clientId);
         var consultations = consultationQueryService.handle(getAllConsultationsByClientIdQuery);
-        var consultationResources = consultations.stream().map(ConsultationResourceFromEntityAssembler::toResourceFromEntity).toList();
+        var consultationResources = consultations.stream().map(consultation -> {
+            var paymentsResource = externalPaymentConsultationServices.createPaymentListResource(consultation.getPayments());
+            return ConsultationResourceFromEntityAssembler.toResourceFromEntity(consultation, paymentsResource);
+        }).toList();
         return ResponseEntity.ok(consultationResources);
     }
 
@@ -82,7 +97,10 @@ public class ConsultationController {
     public ResponseEntity<List<ConsultationResource>> getAllConsultationsByLawyerIdAndClientId(@PathVariable Long lawyerId, @PathVariable Long clientId){
         var getAllConsultationsByLawyerIdQuery = new GetAllConsultationsByClientIdAndLawyerIdQuery(clientId, lawyerId);
         var consultations = consultationQueryService.handle(getAllConsultationsByLawyerIdQuery);
-        var consultationResources = consultations.stream().map(ConsultationResourceFromEntityAssembler::toResourceFromEntity).toList();
+        var consultationResources = consultations.stream().map(consultation -> {
+            var paymentsResource = externalPaymentConsultationServices.createPaymentListResource(consultation.getPayments());
+            return ConsultationResourceFromEntityAssembler.toResourceFromEntity(consultation, paymentsResource);
+        }).toList();
         return ResponseEntity.ok(consultationResources);
     }
 

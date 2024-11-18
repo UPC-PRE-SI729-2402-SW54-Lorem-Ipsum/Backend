@@ -3,10 +3,10 @@ package com.loremipsum.lawconnectplatform.consultation.interfaces.rest;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.ApproveConsultationCommand;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.DeleteConsultationCommand;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.commands.RejectConsultationCommand;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetAllConsultationsByClientIdAndLawyerIdQuery;
+import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetAllConsultationsByClientIdQuery;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetAllConsultationsByLawyerIdQuery;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetAllPaymentsByConsultationIdQuery;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.queries.GetConsultationByIdQuery;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.LawyerC;
 import com.loremipsum.lawconnectplatform.consultation.domain.services.ConsultationCommandService;
 import com.loremipsum.lawconnectplatform.consultation.domain.services.ConsultationQueryService;
 import com.loremipsum.lawconnectplatform.consultation.interfaces.rest.resources.AddPaymentResource;
@@ -64,8 +64,23 @@ public class ConsultationController {
 
     @GetMapping("/lawyerId/{lawyerId}")
     public ResponseEntity<List<ConsultationResource>> getAllConsultationsByLawyerId(@PathVariable Long lawyerId){
-        var lawyer = new LawyerC(lawyerId);
-        var getAllConsultationsByLawyerIdQuery = new GetAllConsultationsByLawyerIdQuery(lawyer);
+        var getAllConsultationsByLawyerIdQuery = new GetAllConsultationsByLawyerIdQuery(lawyerId);
+        var consultations = consultationQueryService.handle(getAllConsultationsByLawyerIdQuery);
+        var consultationResources = consultations.stream().map(ConsultationResourceFromEntityAssembler::toResourceFromEntity).toList();
+        return ResponseEntity.ok(consultationResources);
+    }
+
+    @GetMapping("/clientId/{clientId}")
+    public ResponseEntity<List<ConsultationResource>> getAllConsultationsByClientId(@PathVariable Long clientId){
+        var getAllConsultationsByClientIdQuery = new GetAllConsultationsByClientIdQuery(clientId);
+        var consultations = consultationQueryService.handle(getAllConsultationsByClientIdQuery);
+        var consultationResources = consultations.stream().map(ConsultationResourceFromEntityAssembler::toResourceFromEntity).toList();
+        return ResponseEntity.ok(consultationResources);
+    }
+
+    @GetMapping("/lawyerId/{lawyerId}/clientId/{clientId}")
+    public ResponseEntity<List<ConsultationResource>> getAllConsultationsByLawyerIdAndClientId(@PathVariable Long lawyerId, @PathVariable Long clientId){
+        var getAllConsultationsByLawyerIdQuery = new GetAllConsultationsByClientIdAndLawyerIdQuery(clientId, lawyerId);
         var consultations = consultationQueryService.handle(getAllConsultationsByLawyerIdQuery);
         var consultationResources = consultations.stream().map(ConsultationResourceFromEntityAssembler::toResourceFromEntity).toList();
         return ResponseEntity.ok(consultationResources);
@@ -96,5 +111,4 @@ public class ConsultationController {
         consultationCommandService.handle(new RejectConsultationCommand(consultationId));
         return ResponseEntity.ok("Consultation approved successfully");
     }
-
 }

@@ -13,4 +13,6 @@ public interface ConsultationQueryService {
     Optional<Consultation> handle(GetConsultationByLawyerIdAndPaymentIdQuery query);
     Optional<Consultation> handle(GetConsultationByPaymentIdQuery query);
     Optional<List<Payment>> handle(GetAllPaymentsByConsultationIdQuery query);
+    List<Consultation> handle(GetAllConsultationsByClientIdQuery query);
+    List<Consultation> handle(GetAllConsultationsByClientIdAndLawyerIdQuery query);
 }

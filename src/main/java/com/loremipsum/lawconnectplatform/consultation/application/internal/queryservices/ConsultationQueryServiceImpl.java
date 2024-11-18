@@ -53,6 +53,16 @@ public class ConsultationQueryServiceImpl implements ConsultationQueryService {
     }
 
     @Override
+    public List<Consultation> handle(GetAllConsultationsByClientIdQuery query) {
+        return consultationRepository.findAllByClientId(query.id());
+    }
+
+    @Override
+    public List<Consultation> handle(GetAllConsultationsByClientIdAndLawyerIdQuery query) {
+        return consultationRepository.findAllByClientIdAndLawyerId(query.clientId(), query.lawyerId());
+    }
+
+    @Override
     public List<Consultation> handle(GetAllConsultationsByLawyerIdQuery query) {
         return consultationRepository.findAllByLawyerId(query.lawyerId());
     }

@@ -10,6 +10,7 @@ import com.loremipsum.lawconnectplatform.legalcase.interfaces.rest.resources.Add
 import com.loremipsum.lawconnectplatform.legalcase.interfaces.rest.resources.DocumentsItemResource;
 import com.loremipsum.lawconnectplatform.legalcase.interfaces.rest.transform.AddDocumentByLegalCaseIdCommandFromResourceAssembler;
 import com.loremipsum.lawconnectplatform.legalcase.interfaces.rest.transform.DocumentsItemResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ public class DocumentsItemController {
         this.documentsQueryService = documentsQueryService;
     }
 
+    @Operation(summary = "Add A Document")
     @PostMapping
     public ResponseEntity<?> addDocumentItem(@RequestBody AddDocumentByLegalCaseIdResource resource) {
         var addDocumentItemCommand = AddDocumentByLegalCaseIdCommandFromResourceAssembler.toCommandFromResource(resource);
@@ -38,6 +40,7 @@ public class DocumentsItemController {
         return ResponseEntity.ok("Document added successfully");
     }
 
+    @Operation(summary = "Get A Document By Id")
     @GetMapping("/{documentId}")
     public ResponseEntity<DocumentsItemResource> getDocumentItemById(@PathVariable Long documentId) {
         var getDocumentItemByIdQuery = new GetDocumentByIdQuery(documentId);
@@ -47,6 +50,7 @@ public class DocumentsItemController {
         return ResponseEntity.ok(documentItemResource);
     }
 
+    @Operation(summary = "Get All Documents By Legal Case Id")
     @GetMapping
     public ResponseEntity<List<DocumentsItemResource>> getAllDocumentItemsByLegalCaseId(@RequestParam Long legalCaseId) {
         var getAllDocumentItemsByLegalCaseIdQuery = new GetAllDocumentsByLegalCaseQuery(legalCaseId);
@@ -57,6 +61,7 @@ public class DocumentsItemController {
         return ResponseEntity.ok(documentItemResources);
     }
 
+    @Operation(summary = "Change Document Status")
     @PatchMapping("/status/{documentId}")
     public ResponseEntity<?> changeDocumentStatus(@PathVariable Long documentId, @RequestParam Integer status) {
         documentsCommandService.handle(new ChangeDocumentStatusCommand(documentId, status));

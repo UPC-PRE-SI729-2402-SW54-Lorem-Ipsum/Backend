@@ -11,6 +11,7 @@ import com.loremipsum.lawconnectplatform.legalcase.interfaces.rest.resources.Cre
 import com.loremipsum.lawconnectplatform.legalcase.interfaces.rest.resources.LegalCaseResource;
 import com.loremipsum.lawconnectplatform.legalcase.interfaces.rest.transform.CreateLegalCaseCommandFromResourceAssembler;
 import com.loremipsum.lawconnectplatform.legalcase.interfaces.rest.transform.LegalCaseResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,6 +35,7 @@ public class LegalCaseController {
         this.externalConsultationLegalCaseService = externalConsultationLegalCaseService;
     }
 
+    @Operation(summary = "Create A Legal Case")
     @PostMapping
     public ResponseEntity<LegalCaseResource> createLegalCase(@RequestBody CreateLegalCaseResource resource){
         var createLegalCaseCommand = CreateLegalCaseCommandFromResourceAssembler.toCommandFromResource(resource);
@@ -46,6 +48,7 @@ public class LegalCaseController {
         return new ResponseEntity<>(legalCaseResource, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get A Legal Case By Id")
     @GetMapping("/{legalCaseId}")
     public ResponseEntity<LegalCaseResource> getLegalCaseById(@PathVariable Long legalCaseId){
         var getLegalCaseByIdQuery = new GetLegalCaseByIdQuery(legalCaseId);
@@ -57,6 +60,8 @@ public class LegalCaseController {
         var legalCaseResource = LegalCaseResourceFromEntityAssembler.toEntityFromResource(legalCase.get(), consultationResource.get());
         return ResponseEntity.ok(legalCaseResource);
     }
+
+    @Operation(summary = "Get All Legal Cases")
     @GetMapping
     public ResponseEntity<List<LegalCaseResource>> getAllLegalCases(){
         var legalAllCasesQuery = legalCaseQueryService.handle(new GetAllLegalCasesQuery());
@@ -69,12 +74,15 @@ public class LegalCaseController {
                 .toList();
         return ResponseEntity.ok(legalCaseResources);
     }
+
+    @Operation(summary = "Close A Legal Case")
     @PatchMapping("/close/{legalCaseId}")
     public ResponseEntity<?> closeLegalCase(@PathVariable Long legalCaseId){
         legalCaseCommandService.handle(new CloseLegalCaseCommand(legalCaseId));
         return ResponseEntity.ok("Legal Case Closed Successfully");
     }
 
+    @Operation(summary = "Get A Legal Case By Consultation Id")
     @GetMapping("/consultation/{consultationId}")
     public ResponseEntity<LegalCaseResource> getLegalCaseByConsultationId(@PathVariable Long consultationId){
         var getLegalCaseByConsultationIdQuery = new GetLegalCaseByConsultationIdQuery(consultationId);

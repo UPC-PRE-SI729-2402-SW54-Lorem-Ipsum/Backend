@@ -16,6 +16,7 @@ import com.loremipsum.lawconnectplatform.consultation.interfaces.rest.resources.
 import com.loremipsum.lawconnectplatform.consultation.interfaces.rest.transform.ConsultationResourceFromEntityAssembler;
 import com.loremipsum.lawconnectplatform.consultation.interfaces.rest.transform.CreateConsultationCommandFromResourceAssembler;
 import com.loremipsum.lawconnectplatform.consultation.interfaces.rest.transform.CreatePaymentCommandFromResourceAssembler;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,6 +40,7 @@ public class ConsultationController {
         this.externalPaymentConsultationServices = externalPaymentConsultationServices;
     }
 
+    @Operation(summary = "Create A New Consultation")
     @PostMapping
     public ResponseEntity<ConsultationResource> createConsultation(@RequestBody CreateConsultationResource resource){
         var createConsultationCommand = CreateConsultationCommandFromResourceAssembler.toCommandFromResource(resource);
@@ -56,6 +58,7 @@ public class ConsultationController {
         return new ResponseEntity<>(consultationResource, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get A Consultation By Id")
     @GetMapping("/{consultationId}")
     public ResponseEntity<ConsultationResource> getConsultation(@PathVariable Long consultationId){
         var getConsultationByIdQuery = new GetConsultationByIdQuery(consultationId);
@@ -69,6 +72,7 @@ public class ConsultationController {
         return ResponseEntity.ok(consultationResource);
     }
 
+    @Operation(summary = "Get All Consultations By Lawyer Id")
     @GetMapping("/lawyerId/{lawyerId}")
     public ResponseEntity<List<ConsultationResource>> getAllConsultationsByLawyerId(@PathVariable Long lawyerId){
         var getAllConsultationsByLawyerIdQuery = new GetAllConsultationsByLawyerIdQuery(lawyerId);
@@ -82,6 +86,7 @@ public class ConsultationController {
         return ResponseEntity.ok(consultationResources);
     }
 
+    @Operation(summary = "Get All Consultations By Client Id")
     @GetMapping("/clientId/{clientId}")
     public ResponseEntity<List<ConsultationResource>> getAllConsultationsByClientId(@PathVariable Long clientId){
         var getAllConsultationsByClientIdQuery = new GetAllConsultationsByClientIdQuery(clientId);
@@ -93,6 +98,7 @@ public class ConsultationController {
         return ResponseEntity.ok(consultationResources);
     }
 
+    @Operation(summary = "Get All Consultations By Lawyer Id And Client Id")
     @GetMapping("/lawyerId/{lawyerId}/clientId/{clientId}")
     public ResponseEntity<List<ConsultationResource>> getAllConsultationsByLawyerIdAndClientId(@PathVariable Long lawyerId, @PathVariable Long clientId){
         var getAllConsultationsByLawyerIdQuery = new GetAllConsultationsByClientIdAndLawyerIdQuery(clientId, lawyerId);
@@ -104,6 +110,7 @@ public class ConsultationController {
         return ResponseEntity.ok(consultationResources);
     }
 
+    @Operation(summary = "Delete A Consultation")
     @DeleteMapping("/{consultationId}")
     public ResponseEntity<?> deleteConsultation(@PathVariable Long consultationId){
         var deleteConsultationCommand = new DeleteConsultationCommand(consultationId);
@@ -111,6 +118,7 @@ public class ConsultationController {
         return ResponseEntity.ok("Consultation deleted successfully");
     }
 
+    @Operation(summary = "Add Payment To Consultation")
     @PostMapping("/payments")
     public ResponseEntity<?> addPaymentToConsultation(@RequestBody AddPaymentResource resource){
         var createPaymentCommand = CreatePaymentCommandFromResourceAssembler.toCommandFromResource(resource);
@@ -118,12 +126,14 @@ public class ConsultationController {
         return ResponseEntity.ok("Payment added successfully");
     }
 
+    @Operation(summary = "Approve Consultation")
     @PatchMapping("/approve/{consultationId}")
     public ResponseEntity<?> approveConsultation(@PathVariable Long consultationId){
         consultationCommandService.handle(new ApproveConsultationCommand(consultationId));
         return ResponseEntity.ok("Consultation approved successfully");
     }
 
+    @Operation(summary = "Reject Consultation")
     @PatchMapping("/reject/{consultationId}")
     public ResponseEntity<?> declineConsultation(@PathVariable Long consultationId){
         consultationCommandService.handle(new RejectConsultationCommand(consultationId));

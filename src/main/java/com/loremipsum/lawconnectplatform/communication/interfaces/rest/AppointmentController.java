@@ -1,5 +1,6 @@
 package com.loremipsum.lawconnectplatform.communication.interfaces.rest;
 
+import com.loremipsum.lawconnectplatform.communication.application.internal.outboundServices.ExternalConsultationCommunicationService;
 import com.loremipsum.lawconnectplatform.communication.domain.model.queries.GetAllAppointmentsByConsultationIdQuery;
 import com.loremipsum.lawconnectplatform.communication.domain.services.AppointmentCommandService;
 import com.loremipsum.lawconnectplatform.communication.domain.services.AppointmentQueryService;
@@ -23,10 +24,12 @@ public class AppointmentController {
 
     private final AppointmentCommandService appointmentCommandService;
     private final AppointmentQueryService appointmentQueryService;
+    private final ExternalConsultationCommunicationService externalConsultationCommunicationService;
 
-    public AppointmentController(AppointmentCommandService appointmentCommandService, AppointmentQueryService appointmentQueryService) {
+    public AppointmentController(AppointmentCommandService appointmentCommandService, AppointmentQueryService appointmentQueryService, ExternalConsultationCommunicationService externalConsultationCommunicationService) {
         this.appointmentCommandService = appointmentCommandService;
         this.appointmentQueryService = appointmentQueryService;
+        this.externalConsultationCommunicationService = externalConsultationCommunicationService;
     }
 
     @PostMapping
@@ -34,7 +37,9 @@ public class AppointmentController {
         var createAppointmentCommand = CreateAppointmentCommandFromResourceAssembler.toCommandFromResource(resource);
         var appointment = appointmentCommandService.handle(createAppointmentCommand);
         if (appointment.isEmpty()) return ResponseEntity.badRequest().build();
-        var appointmentResource = AppointmentResourceFromEntityAssembler.toResourceFromEntity(appointment.get());
+        var consultation = externalConsultationCommunicationService.getConsultationById(resource.consultationId());
+        var consultationResource = externalConsultationCommunicationService.createConsultationResource(consultation.get());
+        var appointmentResource = AppointmentResourceFromEntityAssembler.toResourceFromEntity(appointment.get(), consultationResource.get());
         return new ResponseEntity<>(appointmentResource, HttpStatus.CREATED);
     }
 
@@ -43,8 +48,12 @@ public class AppointmentController {
         var getAppointmentByIdQuery = new GetAllAppointmentsByConsultationIdQuery(consultationId);
         var appointment = appointmentQueryService.handle(getAppointmentByIdQuery);
         if (appointment.isEmpty()) return ResponseEntity.notFound().build();
+        var consultation = externalConsultationCommunicationService.getConsultationById(consultationId);
+        var consultationResource = externalConsultationCommunicationService.createConsultationResource(consultation.get());
         var appointmentResource = appointment.stream()
-                .map(AppointmentResourceFromEntityAssembler::toResourceFromEntity)
+                .map(
+                        appointment1 -> AppointmentResourceFromEntityAssembler.toResourceFromEntity(appointment1, consultationResource.get())
+                )
                 .collect(Collectors.toList());
         return ResponseEntity.ok(appointmentResource);
     }

@@ -2,12 +2,13 @@ package com.loremipsum.lawconnectplatform.communication.interfaces.rest.transfor
 
 import com.loremipsum.lawconnectplatform.communication.domain.model.aggregates.ChatRoom;
 import com.loremipsum.lawconnectplatform.communication.interfaces.rest.resources.ChatRoomResource;
+import com.loremipsum.lawconnectplatform.consultation.interfaces.rest.resources.ConsultationResource;
 
 public class ChatRoomResourceFromEntityAssembler {
-    public static ChatRoomResource toResourceFromEntity(ChatRoom entity){
+    public static ChatRoomResource toResourceFromEntity(ChatRoom entity, ConsultationResource consultationResource){
         return new ChatRoomResource(
                 entity.getId(),
-                entity.getConsultation(),
+                consultationResource,
                 entity.getStatus().toString(),
                 entity.getMessages().getMessages().stream().map(MessageResourceFromEntityAssembler::toResourceFromEntity).toList()
         );

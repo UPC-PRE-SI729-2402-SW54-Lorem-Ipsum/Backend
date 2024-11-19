@@ -5,7 +5,6 @@ import com.loremipsum.lawconnectplatform.consultation.domain.model.events.Create
 import com.loremipsum.lawconnectplatform.consultation.domain.model.events.CreateDefaultPaymentEvent;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.ApplicationStatus;
 import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.ConsultationType;
-import com.loremipsum.lawconnectplatform.consultation.domain.model.valueobjects.LawyerC;
 import com.loremipsum.lawconnectplatform.feeing.domain.model.aggregates.Payment;
 import com.loremipsum.lawconnectplatform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
@@ -21,8 +20,7 @@ import java.util.List;
 @Getter
 public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
 
-    @Embedded
-    private LawyerC lawyerId;
+    private Long lawyerId;
 
     private Long clientId;
 
@@ -38,23 +36,17 @@ public class Consultation extends AuditableAbstractAggregateRoot<Consultation> {
     private ApplicationStatus applicationStatus;
 
     public Consultation() {
-        this.lawyerId = new LawyerC(null);
         this.description = "";
     }
 
     public Consultation(CreateConsultationCommand command) {
         this();
-        this.lawyerId = new LawyerC(command.lawyerId());
+        this.lawyerId = command.lawyerId();
         this.description = command.description();
         this.consultationType = ConsultationType.fromId(command.type());
         this.applicationStatus = ApplicationStatus.PENDING;
         this.clientId = command.clientId();
     }
-
-    public Long getLawyerId() {
-        return this.lawyerId.lawyerId();
-    }
-
 
     public void setApplicationAccepted() {
         this.applicationStatus = ApplicationStatus.APPROVED;

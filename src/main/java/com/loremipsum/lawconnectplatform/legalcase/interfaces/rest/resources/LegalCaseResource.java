@@ -1,6 +1,7 @@
 package com.loremipsum.lawconnectplatform.legalcase.interfaces.rest.resources;
 
 import com.loremipsum.lawconnectplatform.consultation.domain.model.aggregates.Consultation;
+import com.loremipsum.lawconnectplatform.consultation.interfaces.rest.resources.ConsultationResource;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.entities.DocumentsItem;
 import com.loremipsum.lawconnectplatform.legalcase.domain.model.valueobjects.Documents;
 
@@ -11,7 +12,7 @@ public record LegalCaseResource(
         String title,
         String description,
         String status,
-        Consultation consultationId,
+        ConsultationResource consultationId,
         List<DocumentsItemResource> documents
 ) {
 }

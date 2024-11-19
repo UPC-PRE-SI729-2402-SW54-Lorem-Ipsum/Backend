@@ -83,14 +83,20 @@ public class UserCommandServiceImpl implements UserCommandService {
     public Optional<User> handle(SignUpCommand command) {
         if (userRepository.existsByUsername(command.email()))
             throw new RuntimeException("Username already exists");
-        var roles = command.roles().stream().map(role -> roleRepository.findByName(role.getName()).orElseThrow(() -> new RuntimeException("Role name not found"))).toList();
+
+        var roles = command.roles().stream()
+                .map(role -> roleRepository.findByName(role.getName())
+                        .orElseThrow(() -> new RuntimeException("Role name not found")))
+                .toList();
+
         var user = new User(
                 command.email(),
                 hashingService.encode(command.password()),
                 roles
         );
 
-        if(command.roles().contains(new Role(Roles.LAWYER))){
+        if (roles.stream().anyMatch(role -> role.getName() == Roles.LAWYER)) {
+            System.out.println("Creating lawyer");
             externalIAMProfileService.createLawyer(
                     command.firstName(),
                     command.lastName(),
@@ -100,7 +106,8 @@ public class UserCommandServiceImpl implements UserCommandService {
                     command.dni(),
                     command.image_url()
             );
-        } else if(roles.contains(new Role(Roles.CLIENT))){
+        } else if (roles.stream().anyMatch(role -> role.getName() == Roles.CLIENT)) {
+            System.out.println("Creating client");
             externalIAMProfileService.createClient(
                     command.firstName(),
                     command.lastName(),
@@ -110,6 +117,8 @@ public class UserCommandServiceImpl implements UserCommandService {
                     command.dni(),
                     command.image_url()
             );
+        } else {
+            throw new RuntimeException("Role not found");
         }
 
         userRepository.save(user);

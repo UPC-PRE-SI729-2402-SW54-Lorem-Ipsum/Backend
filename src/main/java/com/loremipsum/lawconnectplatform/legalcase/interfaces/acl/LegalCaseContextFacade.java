@@ -43,7 +43,8 @@ public class LegalCaseContextFacade {
     }
 
     public void deleteLegalCase(Long legalCaseId){
-        legalCaseCommandService.handle(new DeleteLegalCaseCommand(legalCaseId));
+        var consultation = legalCaseQueryService.handle(new GetLegalCaseByConsultationIdQuery(legalCaseId));
+        legalCaseCommandService.handle(new DeleteLegalCaseCommand(consultation.get().getId()));
     }
 
 }

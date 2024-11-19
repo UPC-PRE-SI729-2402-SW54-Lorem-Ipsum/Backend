@@ -42,8 +42,7 @@ public class LegalCaseCommandServiceImpl implements LegalCaseCommandService {
 
     @Override
     public void handle(DeleteLegalCaseCommand command) {
-        var consultation = externalConsultationLegalCaseService.getConsultationById(command.legalCaseId());
-        var legalCase = legalCaseRepository.findByConsultation(consultation.get());
+        var legalCase = legalCaseRepository.findById(command.legalCaseId());
         legalCase.ifPresent(legalCaseRepository::delete);
     }
 

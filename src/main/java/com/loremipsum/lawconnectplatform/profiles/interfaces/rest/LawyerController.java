@@ -47,7 +47,7 @@ public class LawyerController {
         return new ResponseEntity<>(lawyerResource, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{lawyerId}")
+    @GetMapping("/Id/{lawyerId}")
     public ResponseEntity<LawyerResource> getLawyerById(@PathVariable Long lawyerId){
         var getLawyerByIdQuery = new GetLawyerByIdQuery(lawyerId);
         var lawyer = lawyerQueryService.handle(getLawyerByIdQuery);
@@ -86,7 +86,7 @@ public class LawyerController {
         return ResponseEntity.ok(lawyerResource);
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/email/{email}")
     public ResponseEntity<Long> getLawyerByEmail(@PathVariable String email){
         var lawyer = lawyerQueryService.handle(new GetLawyerIdByEmailQuery(email));
         return lawyer.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());

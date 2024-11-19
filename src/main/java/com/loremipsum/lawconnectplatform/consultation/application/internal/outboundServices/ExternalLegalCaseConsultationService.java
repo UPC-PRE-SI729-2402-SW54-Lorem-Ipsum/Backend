@@ -4,6 +4,7 @@ import com.loremipsum.lawconnectplatform.legalcase.domain.model.aggregates.Legal
 import com.loremipsum.lawconnectplatform.legalcase.interfaces.acl.LegalCaseContextFacade;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service

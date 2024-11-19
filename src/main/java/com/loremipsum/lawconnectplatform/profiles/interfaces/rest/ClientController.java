@@ -41,7 +41,7 @@ public class ClientController {
         return ResponseEntity.ok(clientResource);
     }
 
-    @GetMapping("/{clientId}")
+    @GetMapping("/Id/{clientId}")
     public ResponseEntity<ClientResource> getClientById(@PathVariable Long clientId){
         var getClientByIdQuery = new GetClientByIdQuery(clientId);
         var client = clientQueryService.handle(getClientByIdQuery);
@@ -80,7 +80,7 @@ public class ClientController {
         return ResponseEntity.ok(clientResource);
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/email/{email}")
     public ResponseEntity<Long> getClientByEmail(@PathVariable String email){
         var client = clientQueryService.handle(new GetClientIdByEmailQuery(email));
         return client.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());

@@ -89,9 +89,10 @@ public class ConsultationCommandServiceImpl implements ConsultationCommandServic
             throw new IllegalArgumentException("Consultation does not exist");
         }
         try {
+            var lawyer = externalProfileConsultationService.getLawyerById(consultation.get().getLawyerId());
             externalFollowUpConsultationService.createNotification(
-                    "Consulta Aceptada",
-                    "La consulta ha sido aceptada",
+                    "Consulta Aceptada con " + lawyer.get().getProfile().getName().getFullName(),
+                    "La consulta ha sido aceptada sobre " + consultation.get().getDescription(),
                     consultation.get().getClientId(),
                     command.consultationId()
             );
